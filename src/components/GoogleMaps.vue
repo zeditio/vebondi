@@ -17,7 +17,7 @@
 <script>
 
 // ///////////////////////////////////////
-// New in 0.4.0
+// New in 0.4
 // https://github.com/xkjyeah/vue-google-maps/blob/HEAD/API.md
 import * as VueGoogleMaps from 'vue2-google-maps'
 import axios from 'axios'
