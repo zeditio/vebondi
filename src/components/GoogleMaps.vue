@@ -1,21 +1,12 @@
-<template>
+<template type="text/babel"> 
 
 <gmap-map :center="center" :zoom="15" style="height: 100vh;" :options="{styles: styles, streetViewControl: false}">
-    <gmap-marker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="false"
-        :icon="m.icon"
-        v-if=""
-        @click=""
-      ></gmap-marker>
-    </gmap-map>
+    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" v-if="" @click=""></gmap-marker>
+</gmap-map>
+
 </template>
 
 <script>
-
 // ///////////////////////////////////////
 // New in 0.4
 // https://github.com/xkjyeah/vue-google-maps/blob/HEAD/API.md
@@ -35,42 +26,29 @@ export default {
         lat: -31.4206274,
         lng: -64.1908597
       },
-      styles: [
-        {
-          'featureType': 'administrative',
-          'elementType': 'geometry',
-          'stylers': [
-            {
-              'visibility': 'off'
-            }
-          ]
-        },
-        {
-          'featureType': 'poi',
-          'stylers': [
-            {
-              'visibility': 'off'
-            }
-          ]
-        },
-        {
-          'featureType': 'road',
-          'elementType': 'labels.icon',
-          'stylers': [
-            {
-              'visibility': 'off'
-            }
-          ]
-        },
-        {
-          'featureType': 'transit',
-          'stylers': [
-            {
-              'visibility': 'off'
-            }
-          ]
-        }
-      ],
+      styles: [{
+        'featureType': 'administrative',
+        'elementType': 'geometry',
+        'stylers': [{
+          'visibility': 'off'
+        }]
+      }, {
+        'featureType': 'poi',
+        'stylers': [{
+          'visibility': 'off'
+        }]
+      }, {
+        'featureType': 'road',
+        'elementType': 'labels.icon',
+        'stylers': [{
+          'visibility': 'off'
+        }]
+      }, {
+        'featureType': 'transit',
+        'stylers': [{
+          'visibility': 'off'
+        }]
+      }],
       markers: [],
       jsonFile: []
     }
@@ -78,14 +56,14 @@ export default {
   methods: {
     getJsonFile: function () {
       axios.get(`/static/bus-stops.json`)
-    .then(response => {
-      // JSON responses are automatically parsed.
-      this.jsonFile = response.data
-      this.getMarkers()
-    })
-    .catch(e => {
-      this.errors.push(e)
-    })
+        .then(response => {
+          // JSON responses are automatically parsed.
+          this.jsonFile = response.data
+          this.getMarkers()
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
     },
     getMarkers: function () {
       var icon = {
