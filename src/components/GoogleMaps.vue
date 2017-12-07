@@ -1,7 +1,16 @@
-<template type="text/babel"> 
+<template type="text/babel">
 
-<gmap-map :center="center" :zoom="15" style="height: 100vh;" :options="{styles: styles, streetViewControl: false}">
-    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" v-if="" @click=""></gmap-marker>
+<gmap-map id="googleMaps" :center="center" :zoom="15" :options="{styles: styles, streetViewControl: false}">
+    <gmap-marker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="false"
+        :icon="m.icon"
+        v-if=""
+        @click="">
+    </gmap-marker>
 </gmap-map>
 
 </template>
@@ -67,10 +76,9 @@ export default {
     },
     getMarkers: function () {
       var icon = {
-        path: 'M18,11H6V6H18M16.5,17A1.5,1.5 0 0,1 15,15.5A1.5,1.5 0 0,1 16.5,14A1.5,1.5 0 0,1 18,15.5A1.5,1.5 0 0,1 16.5,17M7.5,17A1.5,1.5 0 0,1 6,15.5A1.5,1.5 0 0,1 7.5,14A1.5,1.5 0 0,1 9,15.5A1.5,1.5 0 0,1 7.5,17M4,16C4,16.88 4.39,17.67 5,18.22V20A1,1 0 0,0 6,21H7A1,1 0 0,0 8,20V19H16V20A1,1 0 0,0 17,21H18A1,1 0 0,0 19,20V18.22C19.61,17.67 20,16.88 20,16V6C20,2.5 16.42,2 12,2C7.58,2 4,2.5 4,6V16Z',
-        fillColor: '#00a665',
-        scale: 0.5,
-        fillOpacity: 1
+        url: 'http://localhost:8080/static/img/bus.png',
+        size: {width: 30, height: 30, f: 'px', b: 'px'},
+        scaledSize: {width: 15, height: 15, f: 'px', b: 'px'}
       }
       for (var i = 0; i < this.jsonFile.length; i++) {
         var busStop = this.jsonFile[i]
@@ -105,3 +113,9 @@ export default {
   }
 }
 </script>
+
+<style>
+#googleMaps{
+  height: 90vh;
+}
+</style>

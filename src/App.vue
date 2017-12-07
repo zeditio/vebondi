@@ -1,3 +1,4 @@
+
 <template>
   <div id="app">
     <router-view></router-view>
@@ -6,11 +7,11 @@
 
 <script>
 export default {
-  name: 'app'
 }
 </script>
 
-<style>html, body{
+<style>
+html, body{
   height: 100%;
   margin: 0;
 }
