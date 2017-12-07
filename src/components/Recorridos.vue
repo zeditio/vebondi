@@ -1,12 +1,18 @@
-<!-- https://medium.com/front-end-hacking/vue-js-mobile-navbar-using-vuetify-803856f00dfd -->
+<style>
+p {
+    text-align: center;
+    position: relative;
+    top: 50vh;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+</style>
+
 <template type="text/babel">
 
-<h1>Recorridos</h1>
+<div>
+    <p>Proximamente</p>
+</div>
 
 </template>
-
-<script>
-export default {
-  name: 'saldo'
-}
-</script>
