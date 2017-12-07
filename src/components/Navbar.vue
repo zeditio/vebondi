@@ -4,25 +4,27 @@
 
 <div>
     <v-card height="100vh">
-        <div>
-            <router-view></router-view>
-            <v-bottom-nav height="10vh" absolute :value="true" :active.sync="e1" color="transparent">
-                <v-btn flat color="teal" value="fav" href="/fav" router>
-                    <span>Favoritos</span>
-                    <v-icon>favorite</v-icon>
-                </v-btn>
-                <v-btn flat color="cyan" value="arribos" href="/arribos" router>
-                    <span>Proximos</span>
-                    <v-icon>timer</v-icon>
-                </v-btn>
-                <v-btn flat color="green" value="saldo" href="/saldo" router>
-                    <span>Saldo</span>
-                    <v-icon>attach_money</v-icon>
-                </v-btn>
-            </v-bottom-nav>
+        <router-view></router-view>
+        <v-fab-transition>
+            <v-btn fab color="pink" style="margin-left: 80vw; margin-top: 75vh;">
+                <v-icon color="white">add</v-icon>
+            </v-btn>
+        </v-fab-transition>
+        <v-bottom-nav height="10vh" absolute :value="true" :active.sync="active" color="transparent">
+            <v-btn flat color="pink" value="recorridos" href="/#/recorridos/" router>
+                <span>Recorridos</span>
+                <v-icon>directions</v-icon>
+            </v-btn>
+            <v-btn flat color="pink" value="favoritos" href="/#/favoritos/" router>
+                <span>Favoritos</span>
+                <v-icon>favorite</v-icon>
+            </v-btn>
+            <v-btn flat color="pink" value="saldo" href="/#/saldo/" router>
+                <span>Saldo</span>
+                <v-icon>attach_money</v-icon>
+            </v-btn>
+        </v-bottom-nav>
     </v-card>
-    <h2>navbar</h2>
-    </div>
 </div>
 
 </template>
@@ -32,7 +34,11 @@ export default {
   name: 'navbar',
   data () {
     return {
-      e1: 'arribos'
+    }
+  },
+  computed: {
+    active: function () {
+      return this.$route.name
     }
   }
 }

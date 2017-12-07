@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import GoogleMaps from '@/components/GoogleMaps'
 import Favoritos from '@/components/Favoritos'
+import Saldo from '@/components/Saldo'
+import Recorridos from '@/components/Recorridos'
 import Navbar from '@/components/Navbar'
 
 Vue.use(Router)
@@ -11,16 +12,22 @@ export default new Router({
     {
       path: '/',
       component: Navbar,
+      redirect: '/favoritos',
       children: [
         {
-          name: 'fav',
-          path: 'fav',
+          name: 'favoritos',
+          path: 'favoritos',
           component: Favoritos
         },
         {
-          name: 'arribos',
-          path: 'arribos',
-          component: GoogleMaps
+          name: 'recorridos',
+          path: 'recorridos',
+          component: Recorridos
+        },
+        {
+          name: 'saldo',
+          path: 'saldo',
+          component: Saldo
         }
 
       ]

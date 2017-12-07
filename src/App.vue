@@ -18,5 +18,6 @@ html, body{
 
 #app {
     min-height: 100%;
+   font-family: 'Roboto', sans-serif;
 }
 </style>
