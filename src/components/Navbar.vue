@@ -1,12 +1,12 @@
 
 
 <template type="text/babel">
-<v-bottom-nav :value="true" :active.sync="active" color="white">
+<v-bottom-nav :value="true" :active="activeTab" color="white">
   <v-btn flat color="pink" value="recorridos" href="/#/recorridos/" router>
     <span>Recorridos</span>
     <v-icon>directions</v-icon>
   </v-btn>
-  <v-btn flat color="pink" value="favoritos" href="/#/favoritos/" router>
+  <v-btn flat color="pink" value="favoritos" href="/#/" router>
     <span>Favoritos</span>
     <v-icon>favorite</v-icon>
   </v-btn>
@@ -24,15 +24,8 @@ export default {
     return {}
   },
   computed: {
-    active: function () {
+    activeTab: function () {
       return this.$route.name
-    },
-    hidden: function () {
-      if (this.$route.name === 'favoritos') {
-        return false
-      } else {
-        return true
-      }
     }
   }
 }

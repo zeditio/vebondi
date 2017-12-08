@@ -9,18 +9,9 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
-    path: '/',
-    redirect: '/favoritos'
-  },
-  {
     name: 'favoritos',
-    path: '/favoritos',
-    component: Favoritos,
-    children: [{
-      name: 'buscar',
-      path: 'buscar',
-      component: GoogleMaps
-    }]
+    path: '/',
+    component: Favoritos
   },
   {
     name: 'recorridos',
@@ -31,6 +22,10 @@ export default new Router({
     name: 'saldo',
     path: '/saldo',
     component: Saldo
+  }, {
+    name: 'buscar',
+    path: '/buscar',
+    component: GoogleMaps
   }
 
   ]
