@@ -2,7 +2,7 @@
   "name": "Vebondi",
   "short_name": "Vebondi",
   "icons": [{
-      "src": "/static/img/icons/msapplication-icon-144x144",
+      "src": "/static/img/icons/msapplication-icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png"
     },
