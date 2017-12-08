@@ -1,36 +1,37 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Favoritos from '@/components/Favoritos'
-import Saldo from '@/components/Saldo'
-import Recorridos from '@/components/Recorridos'
-import Navbar from '@/components/Navbar'
+import Favoritos from '@/components/favoritos'
+import Saldo from '@/components/saldo'
+import Recorridos from '@/components/recorridos'
+import GoogleMaps from '@/components/google-maps'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      component: Navbar,
-      redirect: '/favoritos',
-      children: [
-        {
-          name: 'favoritos',
-          path: 'favoritos',
-          component: Favoritos
-        },
-        {
-          name: 'recorridos',
-          path: 'recorridos',
-          component: Recorridos
-        },
-        {
-          name: 'saldo',
-          path: 'saldo',
-          component: Saldo
-        }
+  routes: [{
+    path: '/',
+    redirect: '/favoritos'
+  },
+  {
+    name: 'favoritos',
+    path: '/favoritos',
+    component: Favoritos,
+    children: [{
+      name: 'buscar',
+      path: 'buscar',
+      component: GoogleMaps
+    }]
+  },
+  {
+    name: 'recorridos',
+    path: '/recorridos',
+    component: Recorridos
+  },
+  {
+    name: 'saldo',
+    path: '/saldo',
+    component: Saldo
+  }
 
-      ]
-    }
   ]
 })
