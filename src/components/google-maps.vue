@@ -1,15 +1,15 @@
+<style>
+
+#googleMaps {
+    height: 91%;
+}
+
+</style>
+
 <template type="text/babel">
 
 <gmap-map id="googleMaps" :center="center" :zoom="15" :options="{styles: styles, streetViewControl: false}">
-    <gmap-marker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="false"
-        :icon="m.icon"
-        v-if=""
-        @click="">
+    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" v-if="" @click="">
     </gmap-marker>
 </gmap-map>
 
@@ -19,9 +19,10 @@
 // ///////////////////////////////////////
 // New in 0.4
 // https://github.com/xkjyeah/vue-google-maps/blob/HEAD/API.md
-import * as VueGoogleMaps from 'vue2-google-maps'
-import axios from 'axios'
+import JsonFile from '@/assets/bus-stops.json'
+import busStopImage from '@/assets/bus.png'
 import Vue from 'vue'
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -64,21 +65,25 @@ export default {
   },
   methods: {
     getJsonFile: function () {
-      axios.get(`/static/bus-stops.json`)
-        .then(response => {
-          // JSON responses are automatically parsed.
-          this.jsonFile = response.data
-          this.getMarkers()
-        })
-        .catch(e => {
-          this.errors.push(e)
-        })
+      this.jsonFile = JsonFile
+      console.log('getJsonFile', this.jsonFile)
+      this.getMarkers()
     },
     getMarkers: function () {
       var icon = {
-        url: 'http://localhost:8080/static/img/bus.png',
-        size: {width: 30, height: 30, f: 'px', b: 'px'},
-        scaledSize: {width: 15, height: 15, f: 'px', b: 'px'}
+        url: busStopImage,
+        size: {
+          width: 30,
+          height: 30,
+          f: 'px',
+          b: 'px'
+        },
+        scaledSize: {
+          width: 15,
+          height: 15,
+          f: 'px',
+          b: 'px'
+        }
       }
       for (var i = 0; i < this.jsonFile.length; i++) {
         var busStop = this.jsonFile[i]
@@ -113,9 +118,3 @@ export default {
   }
 }
 </script>
-
-<style>
-#googleMaps{
-  height: 91%;
-}
-</style>
