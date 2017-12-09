@@ -1,29 +1,48 @@
+<style>
 
+.pull-right {
+    float: right;
+}
+
+</style>
 
 <template type="text/babel">
 
-<v-card color="" class="dark--text">
-    <v-card-title primary-title>
-        <h3 class="headline mb-0">Casa al trabajo - C5463</h3>
+<v-card class="dark--text" hover>
+    <v-card-title>
+        <v-flex xs11>
+            <div class="headline">Casa al trabajo - C5463</div>
+        </v-flex>
+        <v-flex xs1>
+            <v-icon>refresh</v-icon>
+        </v-flex>
     </v-card-title>
-    <v-list dark style="background: inherit">
-        <v-list-tile @click="">
-            <v-list-tile-action>
-                <v-chip color="accent">71</v-chip>
+    <v-list style="background: inherit">
+        <v-list-tile>
+            <v-list-tile-action >
+                <v-chip color="accent" disabled>71</v-chip>
             </v-list-tile-action>
             <v-list-tile-content>
-                <v-list-tile-title>(650) 555-1234</v-list-tile-title>
-                <v-list-tile-sub-title>Mobile</v-list-tile-sub-title>
+                <v-list-tile-title>Arribando, 10 min, 28 min</v-list-tile-title>
             </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
             <v-list-tile-action>
-                <v-icon>chat</v-icon>
+                <v-chip color="accent" disabled>72</v-chip>
             </v-list-tile-action>
+            <v-list-tile-content>
+                <v-list-tile-title>5 min, 14 min, 20 min</v-list-tile-title>
+            </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+            <v-list-tile-action>
+                <v-chip color="accent" disabled>75</v-chip>
+            </v-list-tile-action>
+            <v-list-tile-content>
+                <v-list-tile-title>3 min, 7 min, 11 min</v-list-tile-title>
+            </v-list-tile-content>
         </v-list-tile>
     </v-list>
-    <v-card-actions>
-        <v-btn flat color="primary">Share</v-btn>
-        <v-btn flat color="primary">Explore</v-btn>
-    </v-card-actions>
 </v-card>
 
 </template>

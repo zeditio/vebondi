@@ -9,9 +9,9 @@ import('../node_modules/vuetify/dist/vuetify.min.css') // Ensure you are using c
 
 Vue.use(Vuetify, {
   theme: {
-    primary: colors.green.darken1,
-    secondary: colors.green.lighten1,
-    accent: colors.green.accent1,
+    primary: colors.pink.darken1,
+    secondary: colors.pink.lighten1,
+    accent: colors.pink.accent1,
     error: '#b71c1c'
   }
 })
