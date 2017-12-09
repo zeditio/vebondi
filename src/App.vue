@@ -61,7 +61,7 @@ body {
           </template>
     </v-list>
   </v-navigation-drawer>
-  <v-toolbar color="pink darken-3" dark app clipped-left fixed>
+  <v-toolbar color="primary darken-3" dark app clipped-left fixed>
     <v-toolbar-side-icon v-if="$vuetify.breakpoint.width <= 1264" @click="drawer = !drawer"></v-toolbar-side-icon>
     <span class="title">Vebondi</span>
   </v-toolbar>

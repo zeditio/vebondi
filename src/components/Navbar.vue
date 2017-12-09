@@ -2,15 +2,15 @@
 
 <template type="text/babel">
 <v-bottom-nav :value="true" :active="activeTab" color="white">
-  <v-btn flat color="pink" value="recorridos" href="/#/recorridos/" router>
+  <v-btn flat color="primary" value="recorridos" href="/#/recorridos/" router>
     <span>Recorridos</span>
     <v-icon>directions</v-icon>
   </v-btn>
-  <v-btn flat color="pink" value="favoritos" href="/#/" router>
+  <v-btn flat color="primary" value="favoritos" href="/#/" router>
     <span>Favoritos</span>
     <v-icon>favorite</v-icon>
   </v-btn>
-  <v-btn flat color="pink" value="saldo" href="/#/saldo/" router>
+  <v-btn flat color="primary" value="saldo" href="/#/saldo/" router>
     <span>Saldo</span>
     <v-icon>attach_money</v-icon>
   </v-btn>

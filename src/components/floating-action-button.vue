@@ -3,7 +3,7 @@
 <template type="text/babel">
 
 <v-fab-transition>
-    <v-btn fab bottom right color="pink" v-show="!hidden" @click="action" dark fixed style="bottom: 72px">
+    <v-btn fab bottom right color="accent" v-show="!hidden" @click="action" fixed style="bottom: 72px">
         <v-icon>{{ this.icon}}</v-icon>
     </v-btn>
 </v-fab-transition>
