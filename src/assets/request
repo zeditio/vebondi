@@ -1,0 +1,108 @@
+POST /Paradas.asmx HTTP/1.1
+Host: swandroidcuandollegasmp04.efibus.com.ar
+Content-Type: text/xml
+Cache-Control: no-cache
+Postman-Token: 83972164-aa11-a2a8-dd11-ede5a764fe39
+
+<v:Envelope xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:d="http://www.w3.org/2001/XMLSchema" xmlns:c="http://schemas.xmlsoap.org/soap/encoding/" xmlns:v="http://schemas.xmlsoap.org/soap/envelope/">
+    <v:Header>
+        <n0:UserDetails xmlns:n0="http://tempuri.org/">
+            <n0:userName>UsAnCL3280.</n0:userName>
+            <n0:password>PsAnCL3280.</n0:password>
+        </n0:UserDetails>
+    </v:Header>
+    <v:Body>
+        <RecuperarProximosArribos xmlns="http://tempuri.org/" id="o0" c:root="1">
+            <identificadorParada i:type="d:string">C0016</identificadorParada>
+            <codigoLineaParada i:type="d:int">0</codigoLineaParada>
+            <codigoAplicacion i:type="d:int">0</codigoAplicacion>
+            <codigoEntidad i:type="d:int">0</codigoEntidad>
+            <localidad i:type="d:string">CIUDAD DE CORDOBA</localidad>
+        </RecuperarProximosArribos>
+    </v:Body>
+</v:Envelope>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
+        <RecuperarProximosArribosResponse xmlns="http://tempuri.org/">
+            <RecuperarProximosArribosResult>
+                <ProximoArribo>
+                    <linea>10</linea>
+                    <bandera>A LASALLE</bandera>
+                    <arribo>2 min. aprox.</arribo>
+                    <latitud>-31.465321</latitud>
+                    <longitud>-64.076965</longitud>
+                    <latitudParada>-31.46495</latitudParada>
+                    <longitudParada>-64.094571</longitudParada>
+                </ProximoArribo>
+                <ProximoArribo>
+                    <linea>10</linea>
+                    <bandera>A LASALLE</bandera>
+                    <arribo>2 min. aprox.</arribo>
+                    <latitud>-31.465284</latitud>
+                    <longitud>-64.076942</longitud>
+                    <latitudParada />
+                    <longitudParada />
+                </ProximoArribo>
+                <ProximoArribo>
+                    <linea>12</linea>
+                    <bandera>A B MERCANTIL</bandera>
+                    <arribo>3 min. aprox.</arribo>
+                    <latitud>-31.465246</latitud>
+                    <longitud>-64.07682</longitud>
+                    <latitudParada />
+                    <longitudParada />
+                </ProximoArribo>
+                <ProximoArribo>
+                    <linea>12</linea>
+                    <bandera>A B MERCANTIL</bandera>
+                    <arribo>32 min. aprox.</arribo>
+                    <latitud>-31.465067</latitud>
+                    <longitud>-64.090866</longitud>
+                    <latitudParada />
+                    <longitudParada />
+                </ProximoArribo>
+                <ProximoArribo>
+                    <linea>12</linea>
+                    <bandera>A B MERCANTIL</bandera>
+                    <arribo>45 min. aprox.</arribo>
+                    <latitud>-31.433096</latitud>
+                    <longitud>-64.15731</longitud>
+                    <latitudParada />
+                    <longitudParada />
+                </ProximoArribo>
+                <ProximoArribo>
+                    <linea>10</linea>
+                    <bandera>A LASALLE</bandera>
+                    <arribo>47 min. aprox.</arribo>
+                    <latitud>-31.42075</latitud>
+                    <longitud>-64.186241</longitud>
+                    <latitudParada />
+                    <longitudParada />
+                </ProximoArribo>
+            </RecuperarProximosArribosResult>
+        </RecuperarProximosArribosResponse>
+    </soap:Body>
+</soap:Envelope>
+----------------------------------------------------
+POST /index.aspx/RecuperarDatosPuntos HTTP/1.1
+Host: cordoba.cuandollega.net
+Content-Type: application/json
+Cache-Control: no-cache
+Postman-Token: 310fe18e-a90c-cf9d-dcc3-529f25a71124
+
+{"identificadorParada":"C4062","descripcionLinea":"10","codigioLineaGrupo":"1278"}
+
+{
+    "d": [
+        {
+            "__type": "CuandoLlegaBuenosAires.Recorridos2+datosTotales",
+            "datosMostrar": "A LASALLE 4 min. aprox.",
+            "lat": "-31,419165",
+            "lon": "-64,177788"
+        }
+    ]
+}

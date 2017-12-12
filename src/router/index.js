@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Llegadas from '@/components/Llegadas'
+import Llegadas from '@/components/llegadas'
 import Saldo from '@/components/saldo'
 import Recorridos from '@/components/recorridos'
 import GoogleMaps from '@/components/google-maps'
