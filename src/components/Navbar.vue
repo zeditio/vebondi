@@ -6,9 +6,9 @@
     <span>Recorridos</span>
     <v-icon>directions</v-icon>
   </v-btn>
-  <v-btn flat color="primary" value="favoritos" href="/#/" router>
-    <span>Favoritos</span>
-    <v-icon>favorite</v-icon>
+  <v-btn flat color="primary" value="llegadas" href="/#/" router>
+    <span>LLegadas</span>
+    <v-icon>directions_bus</v-icon>
   </v-btn>
   <v-btn flat color="primary" value="saldo" href="/#/saldo/" router>
     <span>Saldo</span>

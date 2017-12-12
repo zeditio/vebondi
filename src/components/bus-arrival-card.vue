@@ -4,51 +4,89 @@
     float: right;
 }
 
+
 </style>
 
 <template type="text/babel">
 
-<v-card class="dark--text" hover>
-    <v-card-title>
-        <v-flex xs11>
-            <div class="headline">Casa al trabajo - C5463</div>
-        </v-flex>
-        <v-flex xs1>
-            <v-icon>refresh</v-icon>
-        </v-flex>
-    </v-card-title>
-    <v-list style="background: inherit">
-        <v-list-tile>
-            <v-list-tile-action >
-                <v-chip color="accent" disabled>71</v-chip>
-            </v-list-tile-action>
-            <v-list-tile-content>
-                <v-list-tile-title>Arribando, 10 min, 28 min</v-list-tile-title>
-            </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile>
-            <v-list-tile-action>
-                <v-chip color="accent" disabled>72</v-chip>
-            </v-list-tile-action>
-            <v-list-tile-content>
-                <v-list-tile-title>5 min, 14 min, 20 min</v-list-tile-title>
-            </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile>
-            <v-list-tile-action>
-                <v-chip color="accent" disabled>75</v-chip>
-            </v-list-tile-action>
-            <v-list-tile-content>
-                <v-list-tile-title>3 min, 7 min, 11 min</v-list-tile-title>
-            </v-list-tile-content>
-        </v-list-tile>
-    </v-list>
-</v-card>
+<v-flex xs12 md6>
+    <v-card class="dark--text" v-if="isVisible" transition="slide-y-reverse-transition">
+        <v-card-title>
+            <v-flex xs>
+                <div class="headline"> <span v-if="cardName !== undefined "> {{ cardName }} - </span> {{ stopCode }}</div>
+            </v-flex>
+
+            <v-flex xs2 v-for="(button, i) in buttons">
+                <v-icon @click="buttonAction(button)">{{ button }}</v-icon>
+            </v-flex>
+        </v-card-title>
+        <v-list style="background: inherit">
+            <v-list-tile v-for="(busLine, i) in busLines">
+                <v-list-tile-action>
+                    <v-chip color="accent" disabled>{{ busLine.line }}</v-chip>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                    <v-list-tile-title>
+                        <template v-for="(llegada, i) in busLine.llegadas">
+                          <template v-if="i == 0">
+                            {{ llegada }}
+                          </template>
+                          <template v-if="i != 0">
+                            ,{{ llegada }}
+                          </template>
+
+                        </template>
+                    </v-list-tile-title>
+                </v-list-tile-content>
+            </v-list-tile>
+        </v-list>
+    </v-card>
+</v-flex>
 
 </template>
 
 <script>
 export default {
-  name: 'bus-arrival-card'
+  name: 'bus-arrival-card',
+  data () {
+    return {
+    }
+  },
+  methods: {
+    buttonAction: function (icon) {
+      console.log(icon)
+      switch (icon) {
+        case 'close':
+          this.isVisible = false
+          break
+        case 'favorite':
+          break
+        default:
+      }
+    }
+  },
+  props: {
+    cardName: {
+      type: String,
+      required: false
+    },
+    stopCode: {
+      type: String,
+      required: true
+    },
+    busLines: {
+      type: Array,
+      required: true
+    },
+    buttons: {
+      type: Array,
+      required: true
+    },
+    isVisible: {
+      type: Boolean,
+      required: true
+    }
+
+  }
 }
 </script>

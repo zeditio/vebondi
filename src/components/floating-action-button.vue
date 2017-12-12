@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     action: function () {
-      if (this.$route.name === 'favoritos') {
+      if (this.$route.name === 'llegadas') {
         this.$router.push({
           name: 'buscar'
         })
@@ -30,7 +30,7 @@ export default {
       return this.$route.name
     },
     hidden: function () {
-      if (this.$route.name === 'favoritos') {
+      if (this.$route.name === 'llegadas') {
         return false
       }
       if (this.$route.name === 'buscar') {
@@ -39,7 +39,7 @@ export default {
       return true
     },
     icon: function () {
-      if (this.$route.name === 'favoritos') {
+      if (this.$route.name === 'llegadas') {
         return 'search'
       }
       if (this.$route.name === 'buscar') {

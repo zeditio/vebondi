@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Favoritos from '@/components/favoritos'
+import Llegadas from '@/components/Llegadas'
 import Saldo from '@/components/saldo'
 import Recorridos from '@/components/recorridos'
 import GoogleMaps from '@/components/google-maps'
@@ -9,9 +9,9 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
-    name: 'favoritos',
+    name: 'llegadas',
     path: '/',
-    component: Favoritos
+    component: Llegadas
   },
   {
     name: 'recorridos',
