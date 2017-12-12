@@ -83,7 +83,6 @@ export default {
         }
       },
       currentCard: {
-        cardName: 'casa al trabajo',
         stopCode: 'C5643',
         busLines: [{
           line: 71,
@@ -95,13 +94,7 @@ export default {
     }
   },
   methods: {
-    getJsonFile: function () {
-      this.jsonFile = JsonFile
-      console.log('getJsonFile', this.jsonFile)
-      this.getMarkers()
-    },
     getMarkers: function () {
-      console.log('inicio: dibujando paradas en mapa')
       for (var i = 0; i < this.jsonFile.length; i++) {
         var busStop = this.jsonFile[i]
         var marker = {
@@ -114,13 +107,10 @@ export default {
         marker.position.lng = busStop.lng
         marker.icon = this.icon
         marker.busStop = busStop
-
         this.markers.push(marker)
       }
-      console.log('fin: dibujando paradas en mapa')
     },
     showBusArrivalCard: function (busStop) {
-      console.log(busStop)
       this.currentCard.isVisible = true
       this.currentCard.busLines = []
       this.currentCard.stopCode = busStop.stopCode
@@ -138,8 +128,8 @@ export default {
     }
   },
   mounted: function () {
-    let vm = this
-    vm.getJsonFile()
+    this.jsonFile = JsonFile
+    this.getMarkers()
   },
   computed: {
     showMarker: function () {
