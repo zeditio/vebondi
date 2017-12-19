@@ -54,7 +54,6 @@
 
 <script>
 import axios from 'axios'
-import convert from 'xml-js'
 
 export default {
   name: 'bus-arrival-card',
@@ -88,50 +87,22 @@ export default {
         this.busLines[i].llegadas = ['Cargando..']
       }
 
-      const config = {
-        'headers': {
-          'Content-Type': 'text/xml'
-        }
-      }
-      let data = `
-      <v:Envelope xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:d="http://www.w3.org/2001/XMLSchema" xmlns:c="http://schemas.xmlsoap.org/soap/encoding/" xmlns:v="http://schemas.xmlsoap.org/soap/envelope/">
-          <v:Header>
-              <n0:UserDetails xmlns:n0="http://tempuri.org/">
-                  <n0:userName>UsAnCL3280.</n0:userName>
-                  <n0:password>PsAnCL3280.</n0:password>
-              </n0:UserDetails>
-          </v:Header>
-          <v:Body>
-              <RecuperarProximosArribos xmlns="http://tempuri.org/" id="o0" c:root="1">
-                  <identificadorParada i:type="d:string">` + this.stopCode + `</identificadorParada>
-                  <codigoLineaParada i:type="d:int">0</codigoLineaParada>
-                  <codigoAplicacion i:type="d:int">0</codigoAplicacion>
-                  <codigoEntidad i:type="d:int">0</codigoEntidad>
-                  <localidad i:type="d:string">CIUDAD DE CORDOBA</localidad>
-              </RecuperarProximosArribos>
-          </v:Body>
-      </v:Envelope>`
-
-      axios.post('http://swandroidcuandollegasmp04.efibus.com.ar/Paradas.asmx', data, config)
+      axios.get('/api/busstop/' + this.stopCode)
         .then(response => {
           let date = new Date()
           let minutes = ('0' + date.getMinutes()).slice(-2)
-          console.log(date)
           this.requestTime = date.getHours() + ':' + minutes
-          let resultString = convert.xml2json(response.data, {compact: true, spaces: 4})
-          let result = JSON.parse(resultString)
-          let resultArray = result['soap:Envelope']['soap:Body'].RecuperarProximosArribosResponse.RecuperarProximosArribosResult.ProximoArribo
-
+          console.log(response.data)
+          var resultArray = response.data
           for (let i = 0; i < this.busLines.length; i++) {
             this.busLines[i].llegadas = []
             for (let j = 0; j < resultArray.length; j++) {
-              let lineNumber = parseInt(resultArray[j].linea._text)
-              if (this.busLines[i].line === lineNumber) {
-                let cleanText = resultArray[j].arribo._text.replace(/. aprox./g, '')
-                this.busLines[i].llegadas.push(cleanText)
+              if (this.busLines[i].line === resultArray[j].line) {
+                this.busLines[i].llegadas.push(resultArray[j].text)
               }
             }
           }
+
           this.snackbarText = 'Parada ' + this.stopCode + ' actualizada exitosamente'
           this.snackbar = false
           this.snackbar = true

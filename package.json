@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "start": "serve ./dist --single",
+    "start": "node server.js",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
@@ -15,12 +15,16 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
     "json-loader": "^0.5.7",
+    "nodemon": "^1.13.3",
     "serve": "^6.4.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-google-maps": "^0.8.4",
     "vuetify": "^0.17.3",
+    "webpack-dev-server": "^2.9.7",
     "xml-js": "^1.5.2"
   },
   "devDependencies": {
