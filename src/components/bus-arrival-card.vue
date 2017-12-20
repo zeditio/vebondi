@@ -18,12 +18,12 @@
             <v-flex xs2>
               <div> <span class="grey--text"> {{ requestTime }} </span> </div>
             </v-flex>
-            <v-flex xs2 v-for="(button, i) in buttons">
+            <v-flex xs2 v-for="(button, i) in buttons" :key="button">
                 <v-icon @click="buttonAction(button, stopCode)">{{ button }}</v-icon>
             </v-flex>
         </v-card-title>
         <v-list style="background: inherit">
-            <v-list-tile v-for="(busLine, i) in busLines">
+            <v-list-tile v-for="(busLine, i) in busLines" :key="busLine.line">
                 <v-list-tile-action>
                     <v-chip color="accent" disabled>{{ busLine.line }}</v-chip>
                 </v-list-tile-action>

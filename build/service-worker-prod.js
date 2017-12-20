@@ -18,8 +18,7 @@
   );
 
   window.addEventListener('load', function() {
-
-    console.log("isLocalhost", isLocalhost);
+    console.log("production")
 
     if ('serviceWorker' in navigator &&
       (window.location.protocol === 'https:' || isLocalhost)) {

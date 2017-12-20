@@ -13,7 +13,7 @@
 <template type="text/babel">
 <div class="full-height">
   <gmap-map class="full-height" :center="center" :zoom="15" :options="{styles: styles, streetViewControl: false, fullscreenControl: false, disableDefaultUI: true}">
-    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" v-if="" @click="showBusArrivalCard(m.busStop)">
+    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop)">
     </gmap-marker>
   </gmap-map>
   <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode" :bus-lines="currentCard.busLines"  :buttons="buttons"/>
@@ -38,10 +38,6 @@ Vue.use(VueGoogleMaps, {
 export default {
   data () {
     return {
-      center: {
-        lat: -31.4206274,
-        lng: -64.1908597
-      },
       styles: [{
         'featureType': 'administrative',
         'elementType': 'geometry',
@@ -127,7 +123,7 @@ export default {
       this.currentCard.stopCode = busStop.stopCode
     }
   },
-  mounted: function () {
+  created: function () {
     this.jsonFile = JsonFile
     this.getMarkers()
   },
@@ -135,6 +131,9 @@ export default {
     showMarker: function () {
       // Call resizePreserveCenter() on all maps
       Vue.$gmapDefaultResizeBus.$emit('resize')
+    },
+    center () {
+      return this.$store.state.pos
     }
 
   },
