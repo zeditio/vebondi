@@ -6,6 +6,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
+import axios from 'axios'
 import('../node_modules/vuetify/dist/vuetify.min.css') // Ensure you are using css-loader
 
 Vue.use(Vuetify, {
@@ -17,6 +18,10 @@ Vue.use(Vuetify, {
   }
 })
 Vue.config.productionTip = false
+
+// AXIOS CONFIG
+const port = 8080
+axios.defaults.baseURL = location.protocol + '//' + location.hostname + ':' + port
 
 /* eslint-disable no-new */
 new Vue({

@@ -59,7 +59,6 @@ export default {
   name: 'bus-arrival-card',
   data () {
     return {
-      requestTime: null,
       snackbar: false,
       snackbarText: ''
     }
@@ -106,6 +105,9 @@ export default {
           this.snackbarText = 'Parada ' + this.stopCode + ' actualizada exitosamente'
           this.snackbar = false
           this.snackbar = true
+          if (this.$route.name === 'llegadas') {
+            this.saveCard()
+          }
         })
         .catch(e => {
           console.log(e)
@@ -120,11 +122,19 @@ export default {
         savedCards = JSON.parse(savedCards)
       }
       console.log(savedCards)
-      savedCards.push(this.$props)
+      for (var i = 0; i < savedCards.length; i++) {
+        if (savedCards[i].stopCode === this.stopCode) {
+          savedCards.splice(i, 1)
+        }
+      }
+      savedCards.unshift(this.$props)
       localStorage.setItem('savedCards', JSON.stringify(savedCards))
-      this.snackbarText = 'Parada ' + this.stopCode + ' guardada exitosamente'
-      this.snackbar = false
-      this.snackbar = true
+
+      if (this.$route.name === 'buscar') {
+        this.snackbarText = 'Parada ' + this.stopCode + ' guardada exitosamente'
+        this.snackbar = false
+        this.snackbar = true
+      }
     },
     deleteCard: function (stopCode) {
       let savedCards = localStorage.getItem('savedCards')
@@ -160,6 +170,10 @@ export default {
     isVisible: {
       type: Boolean,
       required: true
+    },
+    requestTime: {
+      type: String,
+      required: false
     }
   },
   watch: {

@@ -5,7 +5,9 @@
   "author": "Jose Boretto Blengino",
   "private": true,
   "scripts": {
-    "dev": "node build/dev-server.js",
+    "vue-dev-server": "PORT=8081 node build/dev-server.js",
+    "express-dev-server": "PORT=8080 NODE_ENV=development node server.js",
+    "dev": "npm run vue-dev-server | npm run express-dev-server",
     "start": "node server.js",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",

@@ -10,8 +10,13 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const axios = require('axios')
 const convert = require('xml-js')
+const cors = require('cors')
 
-app.use(express.static(path.join(__dirname, 'dist')))
+// FRONT END
+// =============================================================================
+if (!process.env.NODE_ENV === 'development') {
+  app.use(express.static(path.join(__dirname, 'dist')))
+}
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -19,15 +24,16 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(bodyParser.json())
+app.use(cors())
 
-const port = process.env.PORT || 8080 // set our port
+const port = process.env.PORT || 8081 // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
 const router = express.Router() // get an instance of the express Router
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/busstop/:code', function(req, res) {
+router.get('/busstop/:code', function (req, res) {
   const config = {
     'headers': {
       'Content-Type': 'text/xml'
@@ -54,33 +60,40 @@ router.get('/busstop/:code', function(req, res) {
 
   axios.post('http://swandroidcuandollegasmp04.efibus.com.ar/Paradas.asmx', data, config)
     .then(response => {
+      console.log('')
+      console.log('')
+      console.log(new Date(), '  ===============================================')
       console.log(response.data)
-      let date = new Date()
-      let minutes = ('0' + date.getMinutes()).slice(-2)
-      console.log(date)
-      this.requestTime = date.getHours() + ':' + minutes
       let resultString = convert.xml2json(response.data, {
         compact: true,
         spaces: 4
       })
       let result = JSON.parse(resultString)
       let resultArray = result['soap:Envelope']['soap:Body'].RecuperarProximosArribosResponse.RecuperarProximosArribosResult.ProximoArribo
-      var parsedArray = []
-      for (let j = 0; j < resultArray.length; j++) {
-        var parsedContent = {}
-        let lineNumber = parseInt(resultArray[j].linea._text)
-        parsedContent.line = lineNumber
-        let cleanText = resultArray[j].arribo._text.replace(/. aprox./g, '')
-        parsedContent.text = cleanText
-        parsedArray.push(parsedContent)
+      console.log('')
+      console.log('')
+      console.log(new Date(), '  ===============================================')
+      console.log(JSON.stringify(resultArray))
+      if (resultArray !== undefined) {
+        var parsedArray = []
+        for (let j = 0; j < resultArray.length; j++) {
+          var parsedContent = {}
+          let lineNumber = parseInt(resultArray[j].linea._text)
+          parsedContent.line = lineNumber
+          let cleanText = resultArray[j].arribo._text.replace(/. aprox./g, '')
+          parsedContent.text = cleanText
+          parsedArray.push(parsedContent)
+        }
+        res.setHeader('Content-Type', 'application/json')
+        res.send(JSON.stringify(parsedArray))
+      } else {
+        res.status(500)
+        res.send('bus stop error')
       }
-      res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify(parsedArray));
     })
     .catch(e => {
       console.log(e)
     })
-
 })
 
 // more routes for our API will happen here
@@ -91,5 +104,6 @@ app.use('/api', router)
 
 // START THE SERVER
 // =============================================================================
+console.log('> Starting dev-express server...')
 app.listen(port)
 console.log('Magic happens on port ' + port)

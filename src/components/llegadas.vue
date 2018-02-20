@@ -31,14 +31,7 @@ export default {
   name: 'llegadas',
   data () {
     return {
-      myArrivals: [{
-        cardName: 'casa al trabajo',
-        stopCode: 'C5643',
-        busLines: [{
-          line: 71,
-          llegadas: ['Arribando', '10 min', '15 min']
-        }]
-      }],
+      myArrivals: [],
       buttons: ['delete', 'refresh']
     }
   },
