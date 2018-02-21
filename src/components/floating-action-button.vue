@@ -6,8 +6,6 @@
     <v-btn fab bottom right color="accent" v-show="!hidden" @click="action" fixed style="bottom: 72px">
         <v-icon v-show="!loading" > {{ this.icon}} </v-icon>
         <v-progress-circular indeterminate color="primary" v-show="loading"></v-progress-circular>
-
-
     </v-btn>
 </v-fab-transition>
 

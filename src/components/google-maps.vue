@@ -1,23 +1,28 @@
 <style>
+
 .full-height {
-  height: 100%
+    height: 100%
 }
+
 #floating-panel {
-  position: absolute;
-  bottom: 56px;
-  width: 75%;
-  left: 5%
+    position: absolute;
+    bottom: 56px;
+    width: 75%;
+    left: 5%
 }
+
 </style>
 
 <template type="text/babel">
+
 <div class="full-height">
-  <gmap-map class="full-height" :center="center" :zoom="15" :options="{styles: styles, streetViewControl: false, fullscreenControl: false, disableDefaultUI: true}">
-    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop, m, index)">
-    </gmap-marker>
-  </gmap-map>
-  <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode" :buttons="buttons"/>
+    <gmap-map ref="gmap" class="full-height" :center="center" :zoom="15" :options="{styles: styles, streetViewControl: false, fullscreenControl: false, disableDefaultUI: true}">
+        <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop, m, index)">
+        </gmap-marker>
+    </gmap-map>
+    <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode" :buttons="buttons" />
 </div>
+
 </template>
 
 <script>
@@ -92,20 +97,24 @@ export default {
   },
   methods: {
     getMarkers: function () {
-      for (var i = 0; i < this.jsonFile.length; i++) {
-        var busStop = this.jsonFile[i]
-        var marker = {
-          position: {
-            lat: null,
-            lng: null
+      // We have the problem that the screen freeze loading all markers, so we run the process after 1s
+      let vm = this
+      setTimeout(function afterOneSeconds () {
+        for (var i = 0; i < vm.jsonFile.length; i++) {
+          var busStop = vm.jsonFile[i]
+          var marker = {
+            position: {
+              lat: null,
+              lng: null
+            }
           }
+          marker.position.lat = busStop.lat
+          marker.position.lng = busStop.lng
+          marker.icon = vm.icon
+          marker.busStop = busStop
+          vm.markers.push(marker)
         }
-        marker.position.lat = busStop.lat
-        marker.position.lng = busStop.lng
-        marker.icon = this.icon
-        marker.busStop = busStop
-        this.markers.push(marker)
-      }
+      }, 1000)
     },
     showBusArrivalCard: function (busStop, marker, index) {
       this.markers.splice(index, 1)
@@ -116,9 +125,10 @@ export default {
       this.currentCard.isVisible = true
     }
   },
-  created: function () {
+  mounted: function () {
     this.jsonFile = JsonFile
     this.getMarkers()
+    console.log(new Date(), 'termino de montar')
   },
   computed: {
     showMarker: function () {

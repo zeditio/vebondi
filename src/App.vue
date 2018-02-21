@@ -1,20 +1,22 @@
 <style>
+
 html,
 body {
-  font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
-#app {
-}
+#app {}
+
 .content {
-  padding-bottom: 56px;
+    padding-bottom: 56px;
 }
 
 </style>
 
 <template>
+
 <v-app id="app">
-  <!-- <v-navigation-drawer fixed clipped app touchless temporary v-model="drawer">
+    <!-- <v-navigation-drawer fixed clipped app touchless temporary v-model="drawer">
     <v-list dense>
       <template v-for="(item, i) in items">
               <v-layout row v-if="item.heading" align-center :key="i">
@@ -40,16 +42,17 @@ body {
           </template>
     </v-list>
   </v-navigation-drawer> -->
-  <v-toolbar color="primary" dark app clipped-left fixed>
-    <!-- <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon> -->
-    <span class="title">Vebondi</span>
-  </v-toolbar>
-  <v-content class="content">
-    <router-view></router-view>
-  </v-content>
-  <fab></fab>
-  <navbar></navbar>
+    <v-toolbar color="primary" dark app clipped-left fixed>
+        <!-- <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon> -->
+        <span class="title">Vebondi</span>
+    </v-toolbar>
+    <v-content class="content">
+      <router-view></router-view>
+    </v-content>
+    <fab></fab>
+    <navbar></navbar>
 </v-app>
+
 </template>
 
 <script>
@@ -74,8 +77,7 @@ export default {
   props: {
     source: String
   },
-  methods: {
-  },
+  methods: {},
   components: {
     Fab,
     Navbar

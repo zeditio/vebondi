@@ -13,14 +13,13 @@
         <v-card-title>
 
             <v-flex xs>
-                <div class="headline">
-                  <span v-if="cardName">
+
+                <span v-if="cardName" class="title">
                     {{ cardName }}
                   </span>
-                  <span v-else>
+                <span v-else class="headline">
                     {{ stopCode }}
                   </span>
-                </div>
             </v-flex>
             <v-flex xs2>
                 <div> <span class="grey--text"> {{ requestTime }} </span> </div>
@@ -48,23 +47,17 @@
 
     <v-dialog v-model="dialog" max-width="500px">
         <v-card>
-          <v-form ref="form">
-            <v-card-title>
-              <div class="headline"> Agregar Parada a Favoritos </div>
-            </v-card-title>
-            <v-card-text>
-              <v-text-field
-                    label="Nombre"
-                    v-model="muteableCardName"
-                    :rules="nameRules"
-                    :counter="15"
-                    required
-                  ></v-text-field>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" flat @click="saveCard()" >Guardar</v-btn>
-            </v-card-actions>
-          </v-form>
+            <v-form ref="form">
+                <v-card-title>
+                    <div class="headline"> Añadir a Favoritos </div>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field label="Nombre" v-model="muteableCardName" :rules="nameRules" :counter="10" required></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" flat @click="saveCard()">Guardar</v-btn>
+                </v-card-actions>
+            </v-form>
         </v-card>
     </v-dialog>
 </v-flex>
@@ -85,11 +78,11 @@ export default {
       dialog: false,
       muteableCardName: '',
       muteableBusLines: this.busLines,
-      muteableIsVisible: this.IsVisible,
+      muteableIsVisible: this.isVisible,
       requestTime: '',
       nameRules: [
         v => !!v || 'Nombre requerido',
-        v => v.length <= 15 || 'El nombre debe ser menor a 15 caracteres'
+        v => v.length <= 10 || 'El nombre debe ser menor a 10 caracteres'
       ]
     }
   },
