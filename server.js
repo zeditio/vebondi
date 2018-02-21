@@ -16,9 +16,13 @@ const HashMap = require('hashmap')
 
 // FRONT END
 // =============================================================================
-if (!process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'production') {
+  console.log("production mode: front end mounted");
   app.use(express.static(path.join(__dirname, 'dist')))
+} else {
+  console.log("front end not mounted");
 }
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -143,6 +147,6 @@ app.use('/api', router)
 
 // START THE SERVER
 // =============================================================================
-console.log('> Starting dev-express server...')
+console.log('> Starting Express Server...')
 app.listen(port)
 console.log('Magic happens on port ' + port)

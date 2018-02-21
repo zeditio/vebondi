@@ -128,7 +128,6 @@ export default {
   mounted: function () {
     this.jsonFile = JsonFile
     this.getMarkers()
-    console.log(new Date(), 'termino de montar')
   },
   computed: {
     showMarker: function () {
