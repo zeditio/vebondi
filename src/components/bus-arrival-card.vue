@@ -29,24 +29,17 @@
                 </v-list-tile-action>
                 <v-list-tile-content>
                     <v-list-tile-title>
-                        <template v-for="(llegada, i) in busLine.llegadas">
-                          <template v-if="i == 0">
-                            {{ llegada }}
-                          </template>
-                          <template v-if="i != 0">
-                            - {{ llegada }}
-                          </template>
-                        </template>
+                            {{ busLine.text }}
                     </v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
         </v-list>
     </v-card>
     <v-snackbar
-      :timeout="2000"
-      color="success"
+      :timeout="snackbarTimeout"
+      :color="snackbarColor"
       v-model="snackbar">
-      {{ snackbarText}}
+      <span v-html="snackbarText"></span>
     </v-snackbar>
 </v-flex>
 
@@ -60,7 +53,9 @@ export default {
   data () {
     return {
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      snackbarColor: 'success',
+      snackbarTimeout: 2000
     }
   },
   methods: {
@@ -92,17 +87,11 @@ export default {
           let minutes = ('0' + date.getMinutes()).slice(-2)
           this.requestTime = date.getHours() + ':' + minutes
           console.log(response.data)
-          var resultArray = response.data
-          for (let i = 0; i < this.busLines.length; i++) {
-            this.busLines[i].llegadas = []
-            for (let j = 0; j < resultArray.length; j++) {
-              if (this.busLines[i].line === resultArray[j].line) {
-                this.busLines[i].llegadas.push(resultArray[j].text)
-              }
-            }
-          }
+          this.busLines = response.data
 
           this.snackbarText = 'Parada ' + this.stopCode + ' actualizada exitosamente'
+          this.snackbarColor = 'success'
+          this.snackbarTimeout = 2000
           this.snackbar = false
           this.snackbar = true
           if (this.$route.name === 'llegadas') {
@@ -110,6 +99,11 @@ export default {
           }
         })
         .catch(e => {
+          this.snackbarColor = 'error'
+          this.snackbarText = 'Error Interno del Serivio de Colectivos. <br> Intente mas tarde.'
+          this.snackbarTimeout = 10000
+          this.snackbar = false
+          this.snackbar = true
           console.log(e)
         })
     },

@@ -14,7 +14,7 @@ body {
 
 <template>
 <v-app id="app">
-  <v-navigation-drawer fixed clipped app touchless v-model="drawer">
+  <!-- <v-navigation-drawer fixed clipped app touchless temporary v-model="drawer">
     <v-list dense>
       <template v-for="(item, i) in items">
               <v-layout row v-if="item.heading" align-center :key="i">
@@ -39,9 +39,9 @@ body {
               </v-list-tile>
           </template>
     </v-list>
-  </v-navigation-drawer>
+  </v-navigation-drawer> -->
   <v-toolbar color="primary" dark app clipped-left fixed>
-    <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
+    <!-- <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon> -->
     <span class="title">Vebondi</span>
   </v-toolbar>
   <v-content class="content">

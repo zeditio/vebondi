@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "vue-dev-server": "PORT=8081 node build/dev-server.js",
-    "express-dev-server": "PORT=8080 NODE_ENV=development node server.js",
+    "express-dev-server": "PORT=8080 NODE_ENV=development nodemon server.js",
     "dev": "npm run vue-dev-server | npm run express-dev-server",
     "start": "node server.js",
     "build": "node build/build.js",
@@ -19,6 +19,7 @@
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "hashmap": "^2.3.0",
     "json-loader": "^0.5.7",
     "nodemon": "^1.13.3",
     "serve": "^6.4.1",

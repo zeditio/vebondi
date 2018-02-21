@@ -11,6 +11,8 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const convert = require('xml-js')
 const cors = require('cors')
+const HashMap = require('hashmap')
+
 
 // FRONT END
 // =============================================================================
@@ -33,7 +35,7 @@ const port = process.env.PORT || 8081 // set our port
 const router = express.Router() // get an instance of the express Router
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/busstop/:code', function (req, res) {
+router.get('/busstop/:code', function(req, res) {
   const config = {
     'headers': {
       'Content-Type': 'text/xml'
@@ -61,7 +63,6 @@ router.get('/busstop/:code', function (req, res) {
   axios.post('http://swandroidcuandollegasmp04.efibus.com.ar/Paradas.asmx', data, config)
     .then(response => {
       console.log('')
-      console.log('')
       console.log(new Date(), '  ===============================================')
       console.log(response.data)
       let resultString = convert.xml2json(response.data, {
@@ -71,24 +72,49 @@ router.get('/busstop/:code', function (req, res) {
       let result = JSON.parse(resultString)
       let resultArray = result['soap:Envelope']['soap:Body'].RecuperarProximosArribosResponse.RecuperarProximosArribosResult.ProximoArribo
       console.log('')
-      console.log('')
       console.log(new Date(), '  ===============================================')
       console.log(JSON.stringify(resultArray))
       if (resultArray !== undefined) {
-        var parsedArray = []
+        //clean the xml
+        let parsedArray = []
         for (let j = 0; j < resultArray.length; j++) {
-          var parsedContent = {}
+          let parsedContent = {}
           let lineNumber = parseInt(resultArray[j].linea._text)
           parsedContent.line = lineNumber
           let cleanText = resultArray[j].arribo._text.replace(/. aprox./g, '')
           parsedContent.text = cleanText
           parsedArray.push(parsedContent)
         }
+        console.log(parsedArray)
+        let map = new HashMap()
+        //group the result by line in lineal order
+        for (let i = 0; i < parsedArray.length; i++) {
+          let currentLine = parsedArray[i].line
+          if (map.has(currentLine)) {
+            let text = map.get(currentLine)
+            text = text + ' ' + parsedArray[i].text + ','
+            map.set(currentLine, text)
+          } else {
+            let text = parsedArray[i].text + ','
+            map.set(currentLine, text)
+          }
+
+        }
+        console.log(map)
+        let responseArray = []
+        map.forEach(function(value, key) {
+          let object = {}
+          object.line = key
+          //Remove last comma
+          value = value.replace(/,\s*$/, "")
+          object.text = value
+          responseArray.push(object)
+        });
         res.setHeader('Content-Type', 'application/json')
-        res.send(JSON.stringify(parsedArray))
+        res.send(responseArray)
       } else {
-        res.status(500)
-        res.send('bus stop error')
+        res.status(503)
+        res.send('Service Unavailable')
       }
     })
     .catch(e => {

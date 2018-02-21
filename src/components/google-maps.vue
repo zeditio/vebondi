@@ -13,7 +13,7 @@
 <template type="text/babel">
 <div class="full-height">
   <gmap-map class="full-height" :center="center" :zoom="15" :options="{styles: styles, streetViewControl: false, fullscreenControl: false, disableDefaultUI: true}">
-    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop)">
+    <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop, m, index)">
     </gmap-marker>
   </gmap-map>
   <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode" :bus-lines="currentCard.busLines"  :buttons="buttons"/>
@@ -26,6 +26,7 @@
 // https://github.com/xkjyeah/vue-google-maps/blob/HEAD/API.md
 import JsonFile from '@/assets/bus-stops.json'
 import busStopImage from '@/assets/bus.png'
+import busStopImageSelected from '@/assets/bus-selected.png'
 import BusArrivalCard from '@/components/bus-arrival-card'
 import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
@@ -106,21 +107,14 @@ export default {
         this.markers.push(marker)
       }
     },
-    showBusArrivalCard: function (busStop) {
-      this.currentCard.isVisible = true
+    showBusArrivalCard: function (busStop, marker, index) {
+      this.markers.splice(index, 1)
+      let deppCopy = JSON.parse(JSON.stringify(marker))
+      deppCopy.icon.url = busStopImageSelected
+      this.markers.push(deppCopy)
       this.currentCard.busLines = []
       this.currentCard.stopCode = busStop.stopCode
-      for (var i = 0; i < busStop.lines.length; i++) {
-        var aux = {
-          line: null,
-          llegadas: []
-        }
-        aux.line = busStop.lines[i]
-        aux.llegadas = ['Cargando...']
-        this.currentCard.busLines.push(aux)
-      }
-      this.currentCard.stopCode = busStop.stopCode
-      this.currentCard.stopCode = busStop.stopCode
+      this.currentCard.isVisible = true
     }
   },
   created: function () {
