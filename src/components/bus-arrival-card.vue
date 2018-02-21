@@ -4,43 +4,69 @@
     float: right;
 }
 
-
 </style>
 
 <template type="text/babel">
 
 <v-flex xs12 md6>
-    <v-card class="dark--text" v-if="isVisible" transition="slide-y-reverse-transition">
+    <v-card class="dark--text" v-if="muteableIsVisible" transition="slide-y-reverse-transition">
         <v-card-title>
+
             <v-flex xs>
-                <div class="headline"> <span v-if="cardName !== undefined "> {{ cardName }} - </span> {{ stopCode }}</div>
+                <div class="headline">
+                  <span v-if="cardName">
+                    {{ cardName }}
+                  </span>
+                  <span v-else>
+                    {{ stopCode }}
+                  </span>
+                </div>
             </v-flex>
             <v-flex xs2>
-              <div> <span class="grey--text"> {{ requestTime }} </span> </div>
+                <div> <span class="grey--text"> {{ requestTime }} </span> </div>
             </v-flex>
             <v-flex xs2 v-for="(button, i) in buttons" :key="button">
                 <v-icon @click="buttonAction(button, stopCode)">{{ button }}</v-icon>
             </v-flex>
         </v-card-title>
         <v-list style="background: inherit">
-            <v-list-tile v-for="(busLine, i) in busLines" :key="busLine.line">
+            <v-list-tile v-for="(busLine, i) in muteableBusLines" :key="busLine.line">
                 <v-list-tile-action>
                     <v-chip color="accent" disabled>{{ busLine.line }}</v-chip>
                 </v-list-tile-action>
                 <v-list-tile-content>
                     <v-list-tile-title>
-                            {{ busLine.text }}
+                        {{ busLine.text }}
                     </v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
         </v-list>
     </v-card>
-    <v-snackbar
-      :timeout="snackbarTimeout"
-      :color="snackbarColor"
-      v-model="snackbar">
-      <span v-html="snackbarText"></span>
+    <v-snackbar :timeout="snackbarTimeout" :color="snackbarColor" v-model="snackbar">
+        <span v-html="snackbarText"></span>
     </v-snackbar>
+
+    <v-dialog v-model="dialog" max-width="500px">
+        <v-card>
+          <v-form ref="form">
+            <v-card-title>
+              <div class="headline"> Agregar Parada a Favoritos </div>
+            </v-card-title>
+            <v-card-text>
+              <v-text-field
+                    label="Nombre"
+                    v-model="muteableCardName"
+                    :rules="nameRules"
+                    :counter="15"
+                    required
+                  ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="primary" flat @click="saveCard()" >Guardar</v-btn>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+    </v-dialog>
 </v-flex>
 
 </template>
@@ -55,17 +81,26 @@ export default {
       snackbar: false,
       snackbarText: '',
       snackbarColor: 'success',
-      snackbarTimeout: 2000
+      snackbarTimeout: 2000,
+      dialog: false,
+      muteableCardName: '',
+      muteableBusLines: this.busLines,
+      muteableIsVisible: this.IsVisible,
+      requestTime: '',
+      nameRules: [
+        v => !!v || 'Nombre requerido',
+        v => v.length <= 15 || 'El nombre debe ser menor a 15 caracteres'
+      ]
     }
   },
   methods: {
     buttonAction: function (icon, stopCode) {
       switch (icon) {
         case 'close':
-          this.isVisible = false
+          this.muteableIsVisible = false
           break
         case 'favorite':
-          this.saveCard()
+          this.dialog = true
           break
         case 'refresh':
           this.getArrivals()
@@ -77,17 +112,14 @@ export default {
       }
     },
     getArrivals: function () {
-      for (let i = 0; i < this.busLines.length; i++) {
-        this.busLines[i].llegadas = ['Cargando..']
-      }
-
       axios.get('/api/busstop/' + this.stopCode)
         .then(response => {
+          this.muteableIsVisible = true
           let date = new Date()
           let minutes = ('0' + date.getMinutes()).slice(-2)
           this.requestTime = date.getHours() + ':' + minutes
           console.log(response.data)
-          this.busLines = response.data
+          this.muteableBusLines = response.data
 
           this.snackbarText = 'Parada ' + this.stopCode + ' actualizada exitosamente'
           this.snackbarColor = 'success'
@@ -99,8 +131,9 @@ export default {
           }
         })
         .catch(e => {
+          this.muteableIsVisible = false
           this.snackbarColor = 'error'
-          this.snackbarText = 'Error Interno del Serivio de Colectivos. <br> Intente mas tarde.'
+          this.snackbarText = 'Error Interno del Servicio de Colectivos. <br> Intentelo mas tarde.'
           this.snackbarTimeout = 10000
           this.snackbar = false
           this.snackbar = true
@@ -108,6 +141,13 @@ export default {
         })
     },
     saveCard: function () {
+      if (!this.$refs.form.validate()) {
+        // Native form submission is not yet supported
+        return
+      }
+      this.dialog = false
+      this.$props.cardName = this.muteableCardName
+      this.$props.busLines = this.muteableBusLines
       let savedCards = localStorage.getItem('savedCards')
       console.log(savedCards)
       if (savedCards === null) {
@@ -125,6 +165,7 @@ export default {
       localStorage.setItem('savedCards', JSON.stringify(savedCards))
 
       if (this.$route.name === 'buscar') {
+        this.snackbarColor = 'success'
         this.snackbarText = 'Parada ' + this.stopCode + ' guardada exitosamente'
         this.snackbar = false
         this.snackbar = true
@@ -155,7 +196,7 @@ export default {
     },
     busLines: {
       type: Array,
-      required: true
+      required: false
     },
     buttons: {
       type: Array,
@@ -164,10 +205,6 @@ export default {
     isVisible: {
       type: Boolean,
       required: true
-    },
-    requestTime: {
-      type: String,
-      required: false
     }
   },
   watch: {

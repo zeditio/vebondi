@@ -16,7 +16,7 @@
     <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop, m, index)">
     </gmap-marker>
   </gmap-map>
-  <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode" :bus-lines="currentCard.busLines"  :buttons="buttons"/>
+  <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode" :buttons="buttons"/>
 </div>
 </template>
 
@@ -112,7 +112,6 @@ export default {
       let deppCopy = JSON.parse(JSON.stringify(marker))
       deppCopy.icon.url = busStopImageSelected
       this.markers.push(deppCopy)
-      this.currentCard.busLines = []
       this.currentCard.stopCode = busStop.stopCode
       this.currentCard.isVisible = true
     }

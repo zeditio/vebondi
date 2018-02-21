@@ -70,21 +70,32 @@ router.get('/busstop/:code', function(req, res) {
         spaces: 4
       })
       let result = JSON.parse(resultString)
-      let resultArray = result['soap:Envelope']['soap:Body'].RecuperarProximosArribosResponse.RecuperarProximosArribosResult.ProximoArribo
+      let serverResponse = result['soap:Envelope']['soap:Body'].RecuperarProximosArribosResponse.RecuperarProximosArribosResult.ProximoArribo
       console.log('')
-      console.log(new Date(), '  ===============================================')
-      console.log(JSON.stringify(resultArray))
-      if (resultArray !== undefined) {
+      console.log(new Date(), ' serverResponse ===============================================')
+      console.log(JSON.stringify(serverResponse))
+      if (serverResponse !== undefined) {
         //clean the xml
         let parsedArray = []
-        for (let j = 0; j < resultArray.length; j++) {
+        //sometimes is an object
+        if (serverResponse.length == undefined) {
           let parsedContent = {}
-          let lineNumber = parseInt(resultArray[j].linea._text)
+          let lineNumber = parseInt(serverResponse.linea._text)
           parsedContent.line = lineNumber
-          let cleanText = resultArray[j].arribo._text.replace(/. aprox./g, '')
+          let cleanText = serverResponse.arribo._text.replace(/. aprox./g, '')
           parsedContent.text = cleanText
           parsedArray.push(parsedContent)
         }
+        //sometimes is an Array
+        for (let j = 0; j < serverResponse.length; j++) {
+          let parsedContent = {}
+          let lineNumber = parseInt(serverResponse[j].linea._text)
+          parsedContent.line = lineNumber
+          let cleanText = serverResponse[j].arribo._text.replace(/. aprox./g, '')
+          parsedContent.text = cleanText
+          parsedArray.push(parsedContent)
+        }
+        console.log(new Date(), ' parsedArray ===============================================')
         console.log(parsedArray)
         let map = new HashMap()
         //group the result by line in lineal order
@@ -100,6 +111,8 @@ router.get('/busstop/:code', function(req, res) {
           }
 
         }
+        console.log(new Date(), ' map ===============================================')
+
         console.log(map)
         let responseArray = []
         map.forEach(function(value, key) {
