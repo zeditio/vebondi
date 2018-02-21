@@ -114,7 +114,7 @@ export default {
           marker.busStop = busStop
           vm.markers.push(marker)
         }
-      }, 1000)
+      }, 2000)
     },
     showBusArrivalCard: function (busStop, marker, index) {
       this.markers.splice(index, 1)

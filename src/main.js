@@ -20,8 +20,10 @@ Vue.use(Vuetify, {
 Vue.config.productionTip = false
 
 // AXIOS CONFIG
-const port = 8080
-axios.defaults.baseURL = location.protocol + '//' + location.hostname + ':' + port
+if (process.env.NODE_ENV !== 'production') {
+  const port = 8080
+  axios.defaults.baseURL = location.protocol + '//' + location.hostname + ':' + port
+}
 
 /* eslint-disable no-new */
 new Vue({
