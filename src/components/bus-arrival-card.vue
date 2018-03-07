@@ -184,7 +184,6 @@ export default {
       required: false
     },
     stopCode: {
-      type: String,
       required: true
     },
     busLines: {

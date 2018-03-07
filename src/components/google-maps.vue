@@ -67,19 +67,12 @@ export default {
           'visibility': 'off'
         }]
       }],
-      markers: [],
       jsonFile: [],
       icon: {
         url: busStopImage,
         size: {
-          width: 30,
-          height: 30,
-          f: 'px',
-          b: 'px'
-        },
-        scaledSize: {
-          width: 15,
-          height: 15,
+          width: 50,
+          height: 50,
           f: 'px',
           b: 'px'
         }
@@ -100,27 +93,47 @@ export default {
       // We have the problem that the screen freeze loading all markers, so we run the process after 1s
       let vm = this
       setTimeout(function afterOneSeconds () {
-        for (var i = 0; i < vm.jsonFile.length; i++) {
-          var busStop = vm.jsonFile[i]
-          var marker = {
-            position: {
-              lat: null,
-              lng: null
+        vm.$store.commit({
+          type: 'showPageLoader'
+        })
+        setTimeout(function afterOneSeconds () {
+          console.log('Cantidad de paradas:', vm.jsonFile.length)
+          for (var i = 0; i < vm.jsonFile.length; i++) {
+            var busStop = vm.jsonFile[i]
+            var marker = {
+              position: {
+                lat: null,
+                lng: null
+              }
             }
+            marker.position.lat = busStop.lat
+            marker.position.lng = busStop.lng
+            marker.busStop = busStop
+            marker.icon = vm.icon
+
+            vm.$store.commit({
+              type: 'addMarker',
+              marker: marker
+            })
           }
-          marker.position.lat = busStop.lat
-          marker.position.lng = busStop.lng
-          marker.icon = vm.icon
-          marker.busStop = busStop
-          vm.markers.push(marker)
-        }
-      }, 2000)
+          vm.$store.commit({
+            type: 'hidePageLoader'
+          })
+        }, 1000)
+      }, 1000)
     },
     showBusArrivalCard: function (busStop, marker, index) {
+      // busStop -1 is the marker of gelocation
+      if (busStop === -1) {
+        return
+      }
       this.markers.splice(index, 1)
       let deppCopy = JSON.parse(JSON.stringify(marker))
       deppCopy.icon.url = busStopImageSelected
-      this.markers.push(deppCopy)
+      this.$store.commit({
+        type: 'addMarker',
+        marker: deppCopy
+      })
       this.currentCard.stopCode = busStop.stopCode
       this.currentCard.isVisible = true
     }
@@ -130,12 +143,11 @@ export default {
     this.getMarkers()
   },
   computed: {
-    showMarker: function () {
-      // Call resizePreserveCenter() on all maps
-      Vue.$gmapDefaultResizeBus.$emit('resize')
-    },
     center () {
-      return this.$store.state.pos
+      return this.$store.state.position
+    },
+    markers () {
+      return this.$store.state.markers
     }
 
   },

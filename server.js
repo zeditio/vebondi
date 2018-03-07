@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
   console.log("production mode: front end mounted");
   app.use(express.static(path.join(__dirname, 'dist')))
 } else {
-  console.log("front end not mounted");
+  console.log("development mode: front end not mounted.");
 }
 
 
@@ -40,6 +40,7 @@ const router = express.Router() // get an instance of the express Router
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/busstop/:code', function(req, res) {
+
   const config = {
     'headers': {
       'Content-Type': 'text/xml'
@@ -55,7 +56,7 @@ router.get('/busstop/:code', function(req, res) {
       </v:Header>
       <v:Body>
           <RecuperarProximosArribos xmlns="http://tempuri.org/" id="o0" c:root="1">
-              <identificadorParada i:type="d:string">` + req.params.code + `</identificadorParada>
+              <identificadorParada i:type="d:string">C` + req.params.code + `</identificadorParada>
               <codigoLineaParada i:type="d:int">0</codigoLineaParada>
               <codigoAplicacion i:type="d:int">0</codigoAplicacion>
               <codigoEntidad i:type="d:int">0</codigoEntidad>
@@ -147,6 +148,12 @@ app.use('/api', router)
 
 // START THE SERVER
 // =============================================================================
+if (process.env.NODE_ENV === 'production') {
+  console.log('Back and front on port: ' + port)
+} else {
+  console.log('Backend: ' + port)
+  console.log('Frontend: 8081')
+
+}
 console.log('> Starting Express Server...')
 app.listen(port)
-console.log('Magic happens on port ' + port)

@@ -15,7 +15,6 @@ const proxyMiddleware = require('http-proxy-middleware')
 const webpackConfig = process.env.NODE_ENV === 'testing' ?
   require('./webpack.prod.conf') :
   require('./webpack.dev.conf')
-
 // default port where dev server listens for incoming traffic
 const port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -77,7 +76,7 @@ const readyPromise = new Promise(resolve => {
   _resolve = resolve
 })
 
-console.log('> Starting dev-vue server...')
+console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
   console.log('> Listening at ' + uri + '\n')
   // when env is testing, don't need open it

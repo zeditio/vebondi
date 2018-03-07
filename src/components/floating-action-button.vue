@@ -31,16 +31,26 @@ export default {
         console.log('gelocation')
         if (navigator.geolocation) {
           this.loading = true
-          navigator.geolocation.getCurrentPosition(position => {
-            console.log(position.coords.latitude, position.coords.longitude)
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
+          navigator.geolocation.getCurrentPosition(pos => {
+            console.log(pos.coords.latitude, pos.coords.longitude)
+            var position = {
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude
             }
             this.$store.commit({
               type: 'setMapPosition',
-              pos: pos
+              position: position
             })
+
+            var marker = {
+              position: position,
+              busStop: -1
+            }
+            this.$store.commit({
+              type: 'addMarker',
+              marker: marker
+            })
+
             this.loading = false
           })
         }
