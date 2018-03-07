@@ -105,8 +105,14 @@ export default {
       }
     },
     getArrivals: function () {
+      this.$store.commit({
+        type: 'showPageLoader'
+      })
       axios.get('/api/busstop/' + this.stopCode)
         .then(response => {
+          this.$store.commit({
+            type: 'hidePageLoader'
+          })
           this.muteableIsVisible = true
           let date = new Date()
           let minutes = ('0' + date.getMinutes()).slice(-2)
@@ -124,6 +130,9 @@ export default {
           }
         })
         .catch(e => {
+          this.$store.commit({
+            type: 'hidePageLoader'
+          })
           this.muteableIsVisible = false
           this.snackbarColor = 'error'
           this.snackbarText = 'Error Interno del Servicio de Colectivos. <br> Intentelo mas tarde.'

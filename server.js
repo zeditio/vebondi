@@ -64,11 +64,11 @@ router.get('/busstop/:code', function(req, res) {
           </RecuperarProximosArribos>
       </v:Body>
   </v:Envelope>`
-
+  console.log('\x1b[36m%s\x1b[0m', new Date(), '  ===============================================')
+  console.log('Request: ' + req.params.code);
   axios.post('http://swandroidcuandollegasmp04.efibus.com.ar/Paradas.asmx', data, config)
     .then(response => {
-      console.log('')
-      console.log(new Date(), '  ===============================================')
+      console.log('1- Raw Response (' + new Date() + ') : ')
       console.log(response.data)
       let resultString = convert.xml2json(response.data, {
         compact: true,
@@ -77,7 +77,7 @@ router.get('/busstop/:code', function(req, res) {
       let result = JSON.parse(resultString)
       let serverResponse = result['soap:Envelope']['soap:Body'].RecuperarProximosArribosResponse.RecuperarProximosArribosResult.ProximoArribo
       console.log('')
-      console.log(new Date(), ' serverResponse ===============================================')
+      console.log('2- Parsed Response: ')
       console.log(JSON.stringify(serverResponse))
       if (serverResponse !== undefined) {
         //clean the xml
@@ -95,12 +95,18 @@ router.get('/busstop/:code', function(req, res) {
         for (let j = 0; j < serverResponse.length; j++) {
           let parsedContent = {}
           let lineNumber = parseInt(serverResponse[j].linea._text)
+          if (lineNumber === -1) {
+            console.log('\x1b[31m', 'Parada inexistente, eliminar: ' + req.params.code);
+            res.status(501)
+            res.send('Parada inexistente, reportar al administrador (@joseboretto): ' + req.params.code)
+          }
           parsedContent.line = lineNumber
           let cleanText = serverResponse[j].arribo._text.replace(/. aprox./g, '')
           parsedContent.text = cleanText
           parsedArray.push(parsedContent)
         }
-        console.log(new Date(), ' parsedArray ===============================================')
+        console.log('3- Parsed Array: ')
+
         console.log(parsedArray)
         let map = new HashMap()
         //group the result by line in lineal order
@@ -116,9 +122,6 @@ router.get('/busstop/:code', function(req, res) {
           }
 
         }
-        console.log(new Date(), ' map ===============================================')
-
-        console.log(map)
         let responseArray = []
         map.forEach(function(value, key) {
           let object = {}
@@ -128,9 +131,13 @@ router.get('/busstop/:code', function(req, res) {
           object.text = value
           responseArray.push(object)
         });
+        console.log('4- Response: ')
+        console.log(responseArray)
+        console.log('\x1b[32m', 'Exito');
         res.setHeader('Content-Type', 'application/json')
         res.send(responseArray)
       } else {
+        console.log('\x1b[31m', 'Error, Service  Unavailable ');
         res.status(503)
         res.send('Service Unavailable')
       }

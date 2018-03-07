@@ -8,7 +8,7 @@ body {
 #app {}
 
 .content {
-    padding-bottom: 56px;
+    padding-bottom: 0px;
 }
 
 /* This is a compiled file, you should be editing the file in the templates directory */
@@ -64,23 +64,33 @@ body {
           </template>
     </v-list>
   </v-navigation-drawer> -->
+  <a href="/">
+    <v-toolbar color="primary" dark app clipped-left fixed >
+      <v-toolbar-title style="width: 100%; margin: 0 auto;">
+        <v-layout row >
 
-    <v-toolbar color="primary" dark app clipped-left fixed>
+      <v-flex xs4 offset-xs4 class="text-xs-center">
+          <span>Vebondi</span>
+      </v-flex>
+    </v-layout>
+
+
+      </v-toolbar-title>
         <!-- <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon> -->
-        <span class="title">Vebondi</span>
+       <!-- <span class="title">Vebondi</span> -->
     </v-toolbar>
+    </a>
     <v-content class="content">
       <router-view></router-view>
     </v-content>
     <fab></fab>
-    <navbar></navbar>
+    <!-- <navbar></navbar> -->
 </v-app>
 
 </template>
 
 <script>
 import Fab from '@/components/floating-action-button'
-import Navbar from '@/components/navbar'
 
 export default {
   data: () => ({
@@ -102,8 +112,7 @@ export default {
   },
   methods: {},
   components: {
-    Fab,
-    Navbar
+    Fab
   },
   computed: {
     showPageLoader () {

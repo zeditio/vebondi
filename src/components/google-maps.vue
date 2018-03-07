@@ -6,7 +6,7 @@
 
 #floating-panel {
     position: absolute;
-    bottom: 56px;
+    bottom: 0px;
     width: 75%;
     left: 5%
 }

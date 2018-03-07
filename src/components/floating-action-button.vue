@@ -3,7 +3,7 @@
 <template type="text/babel">
 
 <v-fab-transition>
-    <v-btn fab bottom right color="accent" v-show="!hidden" @click="action" fixed style="bottom: 72px">
+    <v-btn fab bottom right color="accent" v-show="!hidden" @click="action" fixed style="bottom: 16px">
         <v-icon v-show="!loading" > {{ this.icon}} </v-icon>
         <v-progress-circular indeterminate color="primary" v-show="loading"></v-progress-circular>
     </v-btn>
