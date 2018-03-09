@@ -64,13 +64,15 @@ body {
           </template>
     </v-list>
   </v-navigation-drawer> -->
-  <a href="/">
+
     <v-toolbar color="primary" dark app clipped-left fixed >
       <v-toolbar-title style="width: 100%; margin: 0 auto;">
         <v-layout row >
 
       <v-flex xs4 offset-xs4 class="text-xs-center">
-          <span>Vebondi</span>
+        <router-link to="/">
+          <span class="white--text">Vebondi</span>
+          </router-link>
       </v-flex>
     </v-layout>
 
@@ -79,7 +81,7 @@ body {
         <!-- <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon> -->
        <!-- <span class="title">Vebondi</span> -->
     </v-toolbar>
-    </a>
+
     <v-content class="content">
       <router-view></router-view>
     </v-content>

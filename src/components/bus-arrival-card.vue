@@ -13,20 +13,38 @@
         <v-card-title>
 
             <v-flex xs>
-
                 <span v-if="cardName" class="title">
                     {{ cardName }}
                   </span>
                 <span v-else class="headline">
-                    {{ stopCode }}
+                    C{{ stopCode }}
                   </span>
             </v-flex>
             <v-flex xs2>
-                <div> <span class="grey--text"> {{ requestTime }} </span> </div>
+                <div> <span class="grey--text text-xs-center"> {{ requestTime }} </span> </div>
             </v-flex>
-            <v-flex xs2 v-for="(button, i) in buttons" :key="button">
+            <v-flex xs2 v-for="(button, i) in buttons" :key="button" class="text-xs-center" >
+                <template v-if="button === 'more_vert'">
+                <v-menu bottom left>
+   <v-btn icon slot="activator" >
+     <v-icon>more_vert</v-icon>
+   </v-btn>
+   <v-list>
+     <v-list-tile>
+       <v-list-tile-title>Editar</v-list-tile-title>
+     </v-list-tile>
+     <v-list-tile @click="deleteCard(stopCode)">
+       <v-list-tile-title>Eliminar</v-list-tile-title>
+     </v-list-tile>
+   </v-list>
+ </v-menu>
+
+                </template>
+                <template v-else>
                 <v-icon @click="buttonAction(button, stopCode)">{{ button }}</v-icon>
+                </template>
             </v-flex>
+
         </v-card-title>
         <v-list style="background: inherit">
             <v-list-tile v-for="(busLine, i) in muteableBusLines" :key="busLine.line">
@@ -125,28 +143,26 @@ export default {
           this.snackbarTimeout = 2000
           this.snackbar = false
           this.snackbar = true
-          if (this.$route.name === 'llegadas') {
-            this.saveCard()
-          }
+          this.saveCard()
         })
         .catch(e => {
           this.$store.commit({
             type: 'hidePageLoader'
           })
           this.muteableIsVisible = false
-          this.snackbarColor = 'error'
-          this.snackbarText = 'Error Interno del Servicio de Colectivos. <br> Intentelo mas tarde.'
-          this.snackbarTimeout = 10000
+          this.snackbarColor = 'warning'
+          this.snackbarText = 'Informacion no disponible, intentelo mas tarde. <br> Parada: C' + this.stopCode
+          this.snackbarTimeout = 5000
           this.snackbar = false
           this.snackbar = true
           console.log(e)
         })
     },
     saveCard: function () {
-      if (!this.$refs.form.validate()) {
-        // Native form submission is not yet supported
-        return
-      }
+      // if (!this.$refs.form.validate()) {
+      //   // Native form submission is not yet supported
+      //   return
+      // }
       this.dialog = false
       this.$props.cardName = this.muteableCardName
       this.$props.busLines = this.muteableBusLines
@@ -165,13 +181,6 @@ export default {
       }
       savedCards.unshift(this.$props)
       localStorage.setItem('savedCards', JSON.stringify(savedCards))
-
-      if (this.$route.name === 'buscar') {
-        this.snackbarColor = 'success'
-        this.snackbarText = 'Parada ' + this.stopCode + ' guardada exitosamente'
-        this.snackbar = false
-        this.snackbar = true
-      }
     },
     deleteCard: function (stopCode) {
       let savedCards = localStorage.getItem('savedCards')

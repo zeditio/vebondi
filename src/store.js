@@ -17,6 +17,7 @@ const mutations = {
     state.position = payload.position
   },
   addMarker (state, payload) {
+    console.log('addMarker')
     state.markers.push(payload.marker)
   },
   hidePageLoader (state, payload) {

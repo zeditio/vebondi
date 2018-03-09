@@ -71,11 +71,12 @@ export default {
       icon: {
         url: busStopImage,
         size: {
-          width: 50,
-          height: 50,
+          width: 15,
+          height: 15,
           f: 'px',
           b: 'px'
-        }
+        },
+        animation: null
       },
       currentCard: {
         stopCode: 'C5643',
@@ -85,7 +86,7 @@ export default {
         }],
         isVisible: false
       },
-      buttons: ['favorite', 'close']
+      buttons: ['close']
     }
   },
   methods: {
@@ -110,7 +111,6 @@ export default {
             marker.position.lng = busStop.lng
             marker.busStop = busStop
             marker.icon = vm.icon
-
             vm.$store.commit({
               type: 'addMarker',
               marker: marker
