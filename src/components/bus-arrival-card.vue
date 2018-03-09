@@ -23,25 +23,25 @@
             <v-flex xs2>
                 <div> <span class="grey--text text-xs-center"> {{ requestTime }} </span> </div>
             </v-flex>
-            <v-flex xs2 v-for="(button, i) in buttons" :key="button" class="text-xs-center" >
+            <v-flex xs2 v-for="(button, i) in buttons" :key="button" class="text-xs-center">
                 <template v-if="button === 'more_vert'">
-                <v-menu bottom left>
-   <v-btn icon slot="activator" >
-     <v-icon>more_vert</v-icon>
-   </v-btn>
-   <v-list>
-     <v-list-tile>
-       <v-list-tile-title>Editar</v-list-tile-title>
-     </v-list-tile>
-     <v-list-tile @click="deleteCard(stopCode)">
-       <v-list-tile-title>Eliminar</v-list-tile-title>
-     </v-list-tile>
-   </v-list>
- </v-menu>
+                    <v-menu bottom left>
+                        <v-btn icon slot="activator">
+                            <v-icon>more_vert</v-icon>
+                        </v-btn>
+                        <v-list>
+                            <v-list-tile @click="editCardName()">
+                                <v-list-tile-title>Editar</v-list-tile-title>
+                            </v-list-tile>
+                            <v-list-tile @click="deleteCard(stopCode)">
+                                <v-list-tile-title>Eliminar</v-list-tile-title>
+                            </v-list-tile>
+                        </v-list>
+                    </v-menu>
 
                 </template>
                 <template v-else>
-                <v-icon @click="buttonAction(button, stopCode)">{{ button }}</v-icon>
+                    <v-icon @click="buttonAction(button, stopCode)">{{ button }}</v-icon>
                 </template>
             </v-flex>
 
@@ -59,7 +59,7 @@
             </v-list-tile>
         </v-list>
     </v-card>
-    <v-snackbar :timeout="snackbarTimeout" :color="snackbarColor" v-model="snackbar">
+    <v-snackbar :timeout="snackbarTimeout" :color="snackbarColor" v-model="snackbar" vertical multi-line>
         <span v-html="snackbarText"></span>
     </v-snackbar>
 
@@ -67,7 +67,7 @@
         <v-card>
             <v-form ref="form">
                 <v-card-title>
-                    <div class="headline"> Añadir a Favoritos </div>
+                    <div class="headline"> Editar Nombre </div>
                 </v-card-title>
                 <v-card-text>
                     <v-text-field label="Nombre" v-model="muteableCardName" :rules="nameRules" :counter="10" required></v-text-field>
@@ -84,6 +84,7 @@
 
 <script>
 import axios from 'axios'
+const HashMap = require('hashmap')
 
 export default {
   name: 'bus-arrival-card',
@@ -100,7 +101,7 @@ export default {
       requestTime: '',
       nameRules: [
         v => !!v || 'Nombre requerido',
-        v => v.length <= 10 || 'El nombre debe ser menor a 10 caracteres'
+        v => v.length <= 13 || 'El nombre debe ser menor a 13 caracteres'
       ]
     }
   },
@@ -136,44 +137,66 @@ export default {
           let minutes = ('0' + date.getMinutes()).slice(-2)
           this.requestTime = date.getHours() + ':' + minutes
           console.log(response.data)
-          this.muteableBusLines = response.data
 
-          this.snackbarText = 'Parada ' + this.stopCode + ' actualizada exitosamente'
-          this.snackbarColor = 'success'
-          this.snackbarTimeout = 2000
-          this.snackbar = false
-          this.snackbar = true
+          let map = new HashMap()
+          // group the result by line in lineal order
+          for (let i = 0; i < response.data.length; i++) {
+            let currentLine = response.data[i].line
+            if (map.has(currentLine)) {
+              let text = map.get(currentLine)
+              text = text + ' ' + response.data[i].text + ','
+              map.set(currentLine, text)
+            } else {
+              let text = response.data[i].text + ','
+              map.set(currentLine, text)
+            }
+          }
+          let responseArray = []
+          map.forEach(function (value, key) {
+            let object = {}
+            object.line = key
+            // Remove last comma
+            value = value.replace(/,\s*$/, '')
+            object.text = value
+            responseArray.push(object)
+          })
+          this.muteableBusLines = responseArray
           this.saveCard()
+          this.$ga.event({
+            eventCategory: 'map',
+            eventAction: 'get_arraivals_sucess'
+          })
         })
         .catch(e => {
           this.$store.commit({
             type: 'hidePageLoader'
           })
           this.muteableIsVisible = false
-          this.snackbarColor = 'warning'
+          this.snackbarColor = 'light-blue darken-4'
           this.snackbarText = 'Informacion no disponible, intentelo mas tarde. <br> Parada: C' + this.stopCode
           this.snackbarTimeout = 5000
           this.snackbar = false
           this.snackbar = true
           console.log(e)
+          this.$ga.event({
+            eventCategory: 'map',
+            eventAction: 'get_arraivals_error'
+          })
         })
     },
     saveCard: function () {
-      // if (!this.$refs.form.validate()) {
-      //   // Native form submission is not yet supported
-      //   return
-      // }
       this.dialog = false
+      // [Vue warn]: Avoid mutating a prop directly
       this.$props.cardName = this.muteableCardName
       this.$props.busLines = this.muteableBusLines
       let savedCards = localStorage.getItem('savedCards')
-      console.log(savedCards)
+      // console.log(savedCards)
       if (savedCards === null) {
         savedCards = []
       } else {
         savedCards = JSON.parse(savedCards)
       }
-      console.log(savedCards)
+      // console.log(savedCards)
       for (var i = 0; i < savedCards.length; i++) {
         if (savedCards[i].stopCode === this.stopCode) {
           savedCards.splice(i, 1)
@@ -182,7 +205,26 @@ export default {
       savedCards.unshift(this.$props)
       localStorage.setItem('savedCards', JSON.stringify(savedCards))
     },
+    editCardName: function () {
+      this.muteableCardName = ''
+      this.dialog = true
+      if (!this.$refs.form.validate()) {
+        // Native form submission is not yet supported
+        return
+      }
+      // ga('send', 'event', '[category]', '[action]', '[label]', [value]);
+      this.$ga.event({
+        eventCategory: 'card_event',
+        eventAction: 'edit_card_name'
+      })
+
+      this.saveCard()
+    },
     deleteCard: function (stopCode) {
+      this.$ga.event({
+        eventCategory: 'card_event',
+        eventAction: 'delete_card'
+      })
       let savedCards = localStorage.getItem('savedCards')
       savedCards = JSON.parse(savedCards)
       console.log(savedCards)

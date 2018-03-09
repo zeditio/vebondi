@@ -12,6 +12,7 @@ const axios = require('axios')
 const convert = require('xml-js')
 const cors = require('cors')
 const HashMap = require('hashmap')
+const JsonFile = require('./src/assets/bus-stops.json')
 
 
 // FRONT END
@@ -84,58 +85,29 @@ router.get('/busstop/:code', function(req, res) {
         let parsedArray = []
         //sometimes is an object
         if (serverResponse.length == undefined) {
-          let parsedContent = {}
-          let lineNumber = parseInt(serverResponse.linea._text)
-          parsedContent.line = lineNumber
-          let cleanText = serverResponse.arribo._text.replace(/. aprox./g, '')
-          parsedContent.text = cleanText
-          parsedArray.push(parsedContent)
-        }
-        //sometimes is an Array
-        for (let j = 0; j < serverResponse.length; j++) {
-          let parsedContent = {}
-          let lineNumber = parseInt(serverResponse[j].linea._text)
-          if (lineNumber === -1) {
+          let parsedContent = parseXml(serverResponse)
+          if (parsedContent.lineNumber === -1) {
             console.log('\x1b[31m', 'Parada inexistente, eliminar: ' + req.params.code);
             res.status(501)
             res.send('Parada inexistente, reportar al administrador (@joseboretto): ' + req.params.code)
           }
-          parsedContent.line = lineNumber
-          let cleanText = serverResponse[j].arribo._text.replace(/. aprox./g, '')
-          parsedContent.text = cleanText
+          parsedArray.push(parsedContent)
+        }
+        //sometimes is an Array
+        for (let i = 0; i < serverResponse.length; i++) {
+          let parsedContent = parseXml(serverResponse[i])
+          if (parsedContent.lineNumber === -1) {
+            console.log('\x1b[31m', 'Parada inexistente, eliminar: ' + req.params.code);
+            res.status(501)
+            res.send('Parada inexistente, reportar al administrador (@joseboretto): ' + req.params.code)
+          }
           parsedArray.push(parsedContent)
         }
         console.log('3- Parsed Array: ')
-
         console.log(parsedArray)
-        let map = new HashMap()
-        //group the result by line in lineal order
-        for (let i = 0; i < parsedArray.length; i++) {
-          let currentLine = parsedArray[i].line
-          if (map.has(currentLine)) {
-            let text = map.get(currentLine)
-            text = text + ' ' + parsedArray[i].text + ','
-            map.set(currentLine, text)
-          } else {
-            let text = parsedArray[i].text + ','
-            map.set(currentLine, text)
-          }
-
-        }
-        let responseArray = []
-        map.forEach(function(value, key) {
-          let object = {}
-          object.line = key
-          //Remove last comma
-          value = value.replace(/,\s*$/, "")
-          object.text = value
-          responseArray.push(object)
-        });
-        console.log('4- Response: ')
-        console.log(responseArray)
         console.log('\x1b[32m', 'Exito');
         res.setHeader('Content-Type', 'application/json')
-        res.send(responseArray)
+        res.send(parsedArray)
       } else {
         console.log('\x1b[31m', 'Error, Service  Unavailable ');
         res.status(503)
@@ -146,6 +118,54 @@ router.get('/busstop/:code', function(req, res) {
       console.log(e)
     })
 })
+
+router.get('/updateJsonFile', function(req, res) {
+  var busStopUpdated = []
+  for (var i = 0; i < 5; i++) {
+    var busStop = JsonFile[i]
+    console.log('Stop Code', busStop.stopCode)
+    var busStopUpdatedObject = {}
+
+    axios.get('https://vebondi.com/api/busstop/' + busStop.stopCode)
+      .then(response => {
+        busStopUpdatedObject.parada = busStop.stopCode
+        busStopUpdatedObject.latitudParada = response[0].latitudParada
+        busStopUpdatedObject.longitudParada = response[0].longitudParada
+
+        let map = new HashMap()
+        // group the result by line in lineal order
+        for (let i = 0; i < response.data.length; i++) {
+          let currentLine = response.data[i].line
+          if (map.has(currentLine)) {
+            map.set(currentLine, null)
+          } else {
+            map.set(currentLine, null)
+          }
+
+        }
+        busStopUpdatedObject.lineas = map.keys()
+        busStopUpdated.push(busStopUpdatedObject)
+        console.log('busStopUpdatedObject', busStopUpdatedObject)
+      })
+      .catch((error) => {
+        if (error.response.status === 503) {
+          busStopUpdatedObject.parada = busStop.stopCode
+          busStopUpdatedObject.latitudParada = busStop.lat
+          busStopUpdatedObject.longitudParada = busStop.lng
+          busStopUpdated.push(busStopUpdatedObject)
+          console.log('busStopUpdatedObject', busStopUpdatedObject)
+        }
+
+      })
+
+
+
+
+  }
+  console.log(busStopUpdated);
+
+})
+
 
 // more routes for our API will happen here
 
@@ -164,3 +184,25 @@ if (process.env.NODE_ENV === 'production') {
 }
 console.log('> Starting Express Server...')
 app.listen(port)
+
+
+
+function parseXml(serverResponse) {
+  let parsedContent = {}
+  let lineNumber = parseInt(serverResponse.linea._text)
+  parsedContent.line = lineNumber
+
+  let latitudParada = parseFloat(serverResponse.latitudParada._text)
+  parsedContent.latitudParada = latitudParada
+  let longitudParada = parseFloat(serverResponse.longitudParada._text)
+  parsedContent.longitudParada = longitudParada
+
+  let latitud = parseFloat(serverResponse.latitud._text)
+  parsedContent.latitud = latitud
+  let longitud = parseFloat(serverResponse.longitud._text)
+  parsedContent.longitud = longitud
+
+  let cleanText = serverResponse.arribo._text.replace(/. aprox./g, '')
+  parsedContent.text = cleanText
+  return parsedContent
+}

@@ -11,7 +11,9 @@ body {
     padding-bottom: 0px;
 }
 
+
 /* This is a compiled file, you should be editing the file in the templates directory */
+
 #page-loader {
     -webkit-pointer-events: none;
     pointer-events: none;
@@ -30,60 +32,30 @@ body {
     background-position: center;
 }
 
-
-
 </style>
 
 <template>
 
 <v-app id="app">
-  <div id="page-loader" v-if="showPageLoader"></div>
-    <!-- <v-navigation-drawer fixed clipped app touchless temporary v-model="drawer">
-    <v-list dense>
-      <template v-for="(item, i) in items">
-              <v-layout row v-if="item.heading" align-center :key="i">
-                  <v-flex xs6>
-                      <v-subheader v-if="item.heading">
-                          {{ item.heading }}
-                      </v-subheader>
-                  </v-flex>
-                  <v-flex xs6 class="text-xs-center">
-                      <a href="#!" class="body-2 black--text">EDIT</a>
-                  </v-flex>
-              </v-layout>
-              <v-list-tile v-else @click="">
-                  <v-list-tile-action>
-                      <v-icon>{{ item.icon }}</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                      <v-list-tile-title>
-                          {{ item.text }}
-                      </v-list-tile-title>
-                  </v-list-tile-content>
-              </v-list-tile>
-          </template>
-    </v-list>
-  </v-navigation-drawer> -->
-
-    <v-toolbar color="primary" dark app clipped-left fixed >
-      <v-toolbar-title style="width: 100%; margin: 0 auto;">
-        <v-layout row >
-
-      <v-flex xs4 offset-xs4 class="text-xs-center">
-        <router-link to="/">
-          <span class="white--text">Vebondi</span>
-          </router-link>
-      </v-flex>
-    </v-layout>
+    <div id="page-loader" v-if="showPageLoader"></div>
 
 
-      </v-toolbar-title>
-        <!-- <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon> -->
-       <!-- <span class="title">Vebondi</span> -->
+    <v-toolbar color="primary" dark app clipped-left fixed>
+        <v-toolbar-title style="width: 100%; margin: 0 auto;">
+            <v-layout row>
+                <v-flex xs4 offset-xs4 class="text-xs-center"  @click="trackToolbarTitle()">
+                    <router-link to="/">
+                        <span class="white--text">Vebondi</span>
+                    </router-link>
+                </v-flex>
+            </v-layout>
+
+
+        </v-toolbar-title>
     </v-toolbar>
 
     <v-content class="content">
-      <router-view></router-view>
+        <router-view></router-view>
     </v-content>
     <fab></fab>
     <!-- <navbar></navbar> -->
@@ -112,7 +84,14 @@ export default {
   props: {
     source: String
   },
-  methods: {},
+  methods: {
+    trackToolbarTitle: function () {
+      this.$ga.event({
+        eventCategory: 'navitagion',
+        eventAction: 'toolbar_title'
+      })
+    }
+  },
   components: {
     Fab
   },

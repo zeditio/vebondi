@@ -22,13 +22,21 @@ export default {
   methods: {
     action: function () {
       if (this.$route.name === 'llegadas') {
+        this.$ga.event({
+          eventCategory: 'float_action_button',
+          eventAction: 'search'
+        })
+
         this.$router.push({
           name: 'buscar'
         })
         return
       }
       if (this.$route.name === 'buscar') {
-        console.log('gelocation')
+        this.$ga.event({
+          eventCategory: 'float_action_button',
+          eventAction: 'geolocation'
+        })
         if (navigator.geolocation) {
           this.loading = true
           navigator.geolocation.getCurrentPosition(pos => {

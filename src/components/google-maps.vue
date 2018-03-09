@@ -93,12 +93,15 @@ export default {
     getMarkers: function () {
       // We have the problem that the screen freeze loading all markers, so we run the process after 1s
       let vm = this
+      // timeout para que carge el mapa
       setTimeout(function afterOneSeconds () {
         vm.$store.commit({
           type: 'showPageLoader'
         })
+        // timeout para que carge el loeade
         setTimeout(function afterOneSeconds () {
           console.log('Cantidad de paradas:', vm.jsonFile.length)
+
           for (var i = 0; i < vm.jsonFile.length; i++) {
             var busStop = vm.jsonFile[i]
             var marker = {
@@ -116,6 +119,7 @@ export default {
               marker: marker
             })
           }
+
           vm.$store.commit({
             type: 'hidePageLoader'
           })

@@ -7,7 +7,16 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import axios from 'axios'
+import VueAnalytics from 'vue-analytics'
 import('../node_modules/vuetify/dist/vuetify.min.css') // Ensure you are using css-loader
+
+Vue.use(VueAnalytics, {
+  id: 'UA-74104605-7',
+  router,
+  autoTracking: {
+    pageviewOnLoad: false
+  }
+})
 
 Vue.use(Vuetify, {
   theme: {
