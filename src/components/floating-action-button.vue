@@ -33,6 +33,10 @@ export default {
         return
       }
       if (this.$route.name === 'buscar') {
+        // if the map is loading, disable geolocation button
+        if (this.$store.state.showPageLoader === true) {
+          return
+        }
         this.$ga.event({
           eventCategory: 'float_action_button',
           eventAction: 'geolocation'

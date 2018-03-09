@@ -123,8 +123,8 @@ export default {
           vm.$store.commit({
             type: 'hidePageLoader'
           })
-        }, 1000)
-      }, 1000)
+        }, 2000)
+      }, 2000)
     },
     showBusArrivalCard: function (busStop, marker, index) {
       // busStop -1 is the marker of gelocation
