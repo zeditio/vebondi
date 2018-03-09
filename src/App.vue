@@ -37,7 +37,11 @@ body {
 <template>
 
 <v-app id="app">
-    <div id="page-loader" v-if="showPageLoader"></div>
+    <v-dialog v-model="showPageLoader" persistent>
+      <div id="page-loader" v-if="showPageLoader"></div>
+    </v-dialog>
+
+
 
 
     <v-toolbar color="primary" dark app clipped-left fixed>
@@ -49,8 +53,6 @@ body {
                     </router-link>
                 </v-flex>
             </v-layout>
-
-
         </v-toolbar-title>
     </v-toolbar>
 
