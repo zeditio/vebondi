@@ -11,10 +11,9 @@
 <v-flex xs12 md6>
     <v-card class="dark--text" v-if="muteableIsVisible" transition="slide-y-reverse-transition">
         <v-card-title>
-
             <v-flex xs>
-                <span v-if="cardName" class="title">
-                    {{ cardName }}
+                <span v-if="cardName" class="body-2">
+                    <b>{{ cardName }}</b>
                   </span>
                 <span v-else class="headline">
                     C{{ stopCode }}
@@ -70,10 +69,14 @@
                     <div class="headline"> Editar Nombre </div>
                 </v-card-title>
                 <v-card-text>
-                    <v-text-field label="Nombre" v-model="muteableCardName" :rules="nameRules" :counter="10" required></v-text-field>
+                    <v-flex xs12>
+                        <v-text-field label="Nombre" v-model="muteableCardName" required hint="Maximo 20 caracteres" counter="20"></v-text-field>
+                    </v-flex>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn color="primary" flat @click="saveCard()">Guardar</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="red" flat @click.native="dialog = false">Cancelar</v-btn>
+                    <v-btn color="green" flat @click.native="saveCard()">Guardar</v-btn>
                 </v-card-actions>
             </v-form>
         </v-card>
@@ -98,11 +101,7 @@ export default {
       muteableCardName: '',
       muteableBusLines: this.busLines,
       muteableIsVisible: this.isVisible,
-      requestTime: '',
-      nameRules: [
-        v => !!v || 'Nombre requerido',
-        v => v.length <= 13 || 'El nombre debe ser menor a 13 caracteres'
-      ]
+      requestTime: ''
     }
   },
   methods: {
@@ -185,6 +184,9 @@ export default {
         })
     },
     saveCard: function () {
+      if (this.dialog === true && this.muteableCardName.length > 20) {
+        return
+      }
       this.dialog = false
       // [Vue warn]: Avoid mutating a prop directly
       this.$props.cardName = this.muteableCardName
@@ -206,19 +208,13 @@ export default {
       localStorage.setItem('savedCards', JSON.stringify(savedCards))
     },
     editCardName: function () {
-      this.muteableCardName = ''
       this.dialog = true
-      if (!this.$refs.form.validate()) {
-        // Native form submission is not yet supported
-        return
-      }
+      this.muteableCardName = ''
       // ga('send', 'event', '[category]', '[action]', '[label]', [value]);
       this.$ga.event({
         eventCategory: 'card_event',
         eventAction: 'edit_card_name'
       })
-
-      this.saveCard()
     },
     deleteCard: function (stopCode) {
       this.$ga.event({

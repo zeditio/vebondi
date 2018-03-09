@@ -26,7 +26,6 @@ Vue.use(Vuetify, {
     error: '#b71c1c'
   }
 })
-Vue.config.productionTip = false
 
 // AXIOS CONFIG
 if (process.env.NODE_ENV !== 'production') {
@@ -44,3 +43,6 @@ new Vue({
     App
   }
 })
+
+Vue.config.productionTip = false
+Vue.config.devtools = true
