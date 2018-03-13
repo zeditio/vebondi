@@ -61,12 +61,7 @@ var responseSchema = new Schema({
     default: Date.now
   }
 })
-responseSchema.methods.speak = function() {
-  var greeting = this.name ?
-    "Meow name is " + this.name :
-    "I don't have a name";
-  console.log(greeting);
-}
+
 // the schema is useless so far
 // we need to create a model using it
 // make this available to our users in our Node applications
@@ -166,7 +161,6 @@ router.get('/busstop/:code', function(req, res) {
           responseDatabaseObj.longitud = parsedContent.longitud
           responseDatabaseObj.longitud = parsedContent.longitud
           responseDatabaseObj.text = parsedContent.text
-          responseDatabaseObj.speak()
           responseDatabaseObj.save(function(err) {
             if (err) {
               console.log(err);
@@ -189,7 +183,6 @@ router.get('/busstop/:code', function(req, res) {
           if (err) throw err;
           console.log('\x1b[32m', 'Response saved successfully');
         })
-
         console.log('\x1b[31m', 'Error, Service  Unavailable ');
         res.status(503)
         res.send('Service Unavailable')
