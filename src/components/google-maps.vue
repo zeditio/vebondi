@@ -93,37 +93,33 @@ export default {
     getMarkers: function () {
       // We have the problem that the screen freeze loading all markers, so we run the process after 1s
       let vm = this
-      // timeout para que carge el mapa
+      vm.$store.commit({
+        type: 'showPageLoader'
+      })
+      // timeout para que carge el loeade
       setTimeout(function afterOneSeconds () {
-        vm.$store.commit({
-          type: 'showPageLoader'
-        })
-        // timeout para que carge el loeade
-        setTimeout(function afterOneSeconds () {
-          console.log('Cantidad de paradas:', vm.jsonFile.length)
-
-          for (var i = 0; i < vm.jsonFile.length; i++) {
-            var busStop = vm.jsonFile[i]
-            var marker = {
-              position: {
-                lat: null,
-                lng: null
-              }
+        console.log('Cantidad de paradas:', vm.jsonFile.length)
+        for (var i = 0; i < vm.jsonFile.length; i++) {
+          var busStop = vm.jsonFile[i]
+          var marker = {
+            position: {
+              lat: null,
+              lng: null
             }
-            marker.position.lat = busStop.lat
-            marker.position.lng = busStop.lng
-            marker.busStop = busStop
-            marker.icon = vm.icon
-            vm.$store.commit({
-              type: 'addMarker',
-              marker: marker
-            })
           }
-
+          marker.position.lat = busStop.lat
+          marker.position.lng = busStop.lng
+          marker.busStop = busStop
+          marker.icon = vm.icon
           vm.$store.commit({
-            type: 'hidePageLoader'
+            type: 'addMarker',
+            marker: marker
           })
-        }, 2000)
+        }
+
+        vm.$store.commit({
+          type: 'hidePageLoader'
+        })
       }, 2000)
     },
     showBusArrivalCard: function (busStop, marker, index) {

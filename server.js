@@ -12,8 +12,18 @@ const axios = require('axios')
 const convert = require('xml-js')
 const cors = require('cors')
 const HashMap = require('hashmap')
+const mongoose = require('mongoose'); // mongoose for mongodb
 const JsonFile = require('./src/assets/bus-stops.json')
 
+
+// configuration ===============================================================
+mongoose.connect('mongodb://vebondi:tgwHQLI3pHpvLxwr@cluster-1-shard-00-00-ambv7.mongodb.net:27017,cluster-1-shard-00-01-ambv7.mongodb.net:27017,cluster-1-shard-00-02-ambv7.mongodb.net:27017/test?ssl=true&replicaSet=Cluster-1-shard-0&authSource=admin'); // connect to mongoDB database on modulus.io
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  console.log('connection open')
+});
 
 // FRONT END
 // =============================================================================
@@ -23,10 +33,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   console.log("development mode: front end not mounted.");
 }
-
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+// configure app to use bodyParser()// this will let us get the data from a POST
 app.use(bodyParser.urlencoded({
   extended: true
 }))
@@ -34,6 +41,36 @@ app.use(bodyParser.json())
 app.use(cors())
 
 const port = process.env.PORT || 8081 // set our port
+
+// define model ================================================================
+var Schema = mongoose.Schema
+
+// create a schema
+var responseSchema = new Schema({
+  stopCode: String,
+  httpStatus: Number,
+  line: Number,
+  latitudParada: Number,
+  longitudParada: Number,
+  latitud: Number,
+  longitud: Number,
+  text: String,
+  created_at: {
+    type: Date,
+    // `Date.now()` returns the current unix timestamp as a number
+    default: Date.now
+  }
+})
+responseSchema.methods.speak = function() {
+  var greeting = this.name ?
+    "Meow name is " + this.name :
+    "I don't have a name";
+  console.log(greeting);
+}
+// the schema is useless so far
+// we need to create a model using it
+// make this available to our users in our Node applications
+var ResponseDatabase = mongoose.model('ResponseDatabase', responseSchema)
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -69,6 +106,7 @@ router.get('/busstop/:code', function(req, res) {
   console.log('Request: ' + req.params.code);
   axios.post('http://swandroidcuandollegasmp04.efibus.com.ar/Paradas.asmx', data, config)
     .then(response => {
+
       console.log('1- Raw Response (' + new Date() + ') : ')
       console.log(response.data)
       let resultString = convert.xml2json(response.data, {
@@ -87,6 +125,13 @@ router.get('/busstop/:code', function(req, res) {
         if (serverResponse.length == undefined) {
           let parsedContent = parseXml(serverResponse)
           if (parsedContent.lineNumber === -1) {
+            var responseDatabaseObj = new ResponseDatabase();
+            responseDatabaseObj.stopCode = req.params.code
+            responseDatabaseObj.httpStatus = 501;
+            responseDatabaseObj.save(function(err) {
+              if (err) throw err;
+              console.log('\x1b[32m', 'Response saved successfully');
+            })
             console.log('\x1b[31m', 'Parada inexistente, eliminar: ' + req.params.code);
             res.status(501)
             res.send('Parada inexistente, reportar al administrador (@joseboretto): ' + req.params.code)
@@ -97,10 +142,38 @@ router.get('/busstop/:code', function(req, res) {
         for (let i = 0; i < serverResponse.length; i++) {
           let parsedContent = parseXml(serverResponse[i])
           if (parsedContent.lineNumber === -1) {
+            var responseDatabaseObj = new ResponseDatabase();
+            responseDatabaseObj.stopCode = req.params.code
+            responseDatabaseObj.httpStatus = 501;
+            responseDatabaseObj.save(function(err) {
+              if (err) throw err;
+              console.log('\x1b[32m', 'Response saved successfully');
+            })
             console.log('\x1b[31m', 'Parada inexistente, eliminar: ' + req.params.code);
             res.status(501)
             res.send('Parada inexistente, reportar al administrador (@joseboretto): ' + req.params.code)
           }
+          //copy all data
+          var responseDatabaseObj = new ResponseDatabase();
+          responseDatabaseObj.stopCode = req.params.code
+          responseDatabaseObj.httpStatus = 200
+          responseDatabaseObj.line = parsedContent.line
+          if (!isNaN(parsedContent.latitudParada)) {
+            responseDatabaseObj.latitudParada = parsedContent.latitudParada
+            responseDatabaseObj.longitudParada = parsedContent.longitudParada
+          }
+          responseDatabaseObj.latitud = parsedContent.latitud
+          responseDatabaseObj.longitud = parsedContent.longitud
+          responseDatabaseObj.longitud = parsedContent.longitud
+          responseDatabaseObj.text = parsedContent.text
+          responseDatabaseObj.speak()
+          responseDatabaseObj.save(function(err) {
+            if (err) {
+              console.log(err);
+              throw err;
+            }
+            console.log('\x1b[32m', 'Response saved successfully');
+          })
           parsedArray.push(parsedContent)
         }
         console.log('3- Parsed Array: ')
@@ -109,64 +182,41 @@ router.get('/busstop/:code', function(req, res) {
         res.setHeader('Content-Type', 'application/json')
         res.send(parsedArray)
       } else {
+        var responseDatabaseObj = new ResponseDatabase();
+        responseDatabaseObj.stopCode = req.params.code
+        responseDatabaseObj.httpStatus = 503;
+        responseDatabaseObj.save(function(err) {
+          if (err) throw err;
+          console.log('\x1b[32m', 'Response saved successfully');
+        })
+
         console.log('\x1b[31m', 'Error, Service  Unavailable ');
         res.status(503)
         res.send('Service Unavailable')
       }
+
+
+
+
+
+
     })
     .catch(e => {
       console.log(e)
     })
 })
 
-router.get('/updateJsonFile', function(req, res) {
-  var busStopUpdated = []
-  for (var i = 0; i < 5; i++) {
-    var busStop = JsonFile[i]
-    console.log('Stop Code', busStop.stopCode)
-    var busStopUpdatedObject = {}
 
-    axios.get('https://vebondi.com/api/busstop/' + busStop.stopCode)
-      .then(response => {
-        busStopUpdatedObject.parada = busStop.stopCode
-        busStopUpdatedObject.latitudParada = response[0].latitudParada
-        busStopUpdatedObject.longitudParada = response[0].longitudParada
-
-        let map = new HashMap()
-        // group the result by line in lineal order
-        for (let i = 0; i < response.data.length; i++) {
-          let currentLine = response.data[i].line
-          if (map.has(currentLine)) {
-            map.set(currentLine, null)
-          } else {
-            map.set(currentLine, null)
-          }
-
-        }
-        busStopUpdatedObject.lineas = map.keys()
-        busStopUpdated.push(busStopUpdatedObject)
-        console.log('busStopUpdatedObject', busStopUpdatedObject)
-      })
-      .catch((error) => {
-        if (error.response.status === 503) {
-          busStopUpdatedObject.parada = busStop.stopCode
-          busStopUpdatedObject.latitudParada = busStop.lat
-          busStopUpdatedObject.longitudParada = busStop.lng
-          busStopUpdated.push(busStopUpdatedObject)
-          console.log('busStopUpdatedObject', busStopUpdatedObject)
-        }
-
-      })
-
-
-
-
-  }
-  console.log(busStopUpdated);
-
+router.get('/database/findAll', function(req, res) {
+  // get all the users
+  ResponseDatabase.find({}, function(err, responses) {
+    if (err) throw err;
+    // object of all the users
+    console.log(responses);
+    res.setHeader('Content-Type', 'application/json')
+    res.send(responses)
+  });
 })
-
-
 // more routes for our API will happen here
 
 // REGISTER OUR ROUTES -------------------------------
