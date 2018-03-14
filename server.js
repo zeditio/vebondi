@@ -210,6 +210,7 @@ router.get('/database/findAll', function(req, res) {
     res.send(responses)
   });
 })
+
 // more routes for our API will happen here
 
 // REGISTER OUR ROUTES -------------------------------

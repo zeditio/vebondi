@@ -13,10 +13,13 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const loadMinified = require('./load-minified')
+// This line should go at the top of the file where other 'imports' live in
+//https://vuejs-templates.github.io/webpack/prerender.html
+const PrerenderSpaPlugin = require('prerender-spa-plugin')
 
-const env = process.env.NODE_ENV === 'testing'
-  ? require('../config/test.env')
-  : config.build.env
+const env = process.env.NODE_ENV === 'testing' ?
+  require('../config/test.env') :
+  config.build.env
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -57,9 +60,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: process.env.NODE_ENV === 'testing'
-        ? 'index.html'
-        : config.build.index,
+      filename: process.env.NODE_ENV === 'testing' ?
+        'index.html' : config.build.index,
       template: 'index.html',
       inject: true,
       minify: {
@@ -77,7 +79,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: function (module, count) {
+      minChunks: function(module, count) {
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&
@@ -95,13 +97,11 @@ const webpackConfig = merge(baseWebpackConfig, {
       chunks: ['vendor']
     }),
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
-        ignore: ['.*']
-      }
-    ]),
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, '../static'),
+      to: config.build.assetsSubDirectory,
+      ignore: ['.*']
+    }]),
     // service worker caching
     new SWPrecacheWebpackPlugin({
       cacheId: 'vebondi',
@@ -109,7 +109,14 @@ const webpackConfig = merge(baseWebpackConfig, {
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
       minify: true,
       stripPrefix: 'dist/'
-    })
+    }),
+    // https://vuejs-templates.github.io/webpack/prerender.html
+    new PrerenderSpaPlugin(
+      // Path to compiled app
+      path.join(__dirname, '../dist'),
+      // List of endpoints you wish to prerender
+      ['/']
+    )
   ]
 })
 

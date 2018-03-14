@@ -49,7 +49,7 @@ body {
             <v-layout row>
                 <v-flex xs4 offset-xs4 class="text-xs-center"  @click="trackToolbarTitle()">
                     <router-link to="/">
-                        <span class="white--text">Vebondi</span>
+                        <h2 class="white--text">Vebondi</h2>
                     </router-link>
                 </v-flex>
             </v-layout>
