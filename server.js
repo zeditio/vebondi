@@ -91,7 +91,7 @@ router.get('/busstop/:code', function(req, res) {
       </v:Header>
       <v:Body>
           <RecuperarProximosArribos xmlns="http://tempuri.org/" id="o0" c:root="1">
-              <identificadorParada i:type="d:string">C` + req.params.code + `</identificadorParada>
+              <identificadorParada i:type="d:string">` + req.params.code + `</identificadorParada>
               <codigoLineaParada i:type="d:int">0</codigoLineaParada>
               <codigoAplicacion i:type="d:int">0</codigoAplicacion>
               <codigoEntidad i:type="d:int">0</codigoEntidad>
@@ -189,12 +189,6 @@ router.get('/busstop/:code', function(req, res) {
         res.status(503)
         res.send('Service Unavailable')
       }
-
-
-
-
-
-
     })
     .catch(e => {
       console.log(e)
