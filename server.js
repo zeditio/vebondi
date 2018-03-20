@@ -13,10 +13,12 @@ const convert = require('xml-js')
 const cors = require('cors')
 const HashMap = require('hashmap')
 const mongoose = require('mongoose'); // mongoose for mongodb
+const fs = require('fs'); // mongoose for mongodb
 const JsonFile = require('./src/assets/bus-stops.json')
 
 
 // configuration ===============================================================
+mongoose.Promise = Promise;
 mongoose.connect('mongodb://vebondi:tgwHQLI3pHpvLxwr@cluster-1-shard-00-00-ambv7.mongodb.net:27017,cluster-1-shard-00-01-ambv7.mongodb.net:27017,cluster-1-shard-00-02-ambv7.mongodb.net:27017/test?ssl=true&replicaSet=Cluster-1-shard-0&authSource=admin'); // connect to mongoDB database on modulus.io
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -119,7 +121,7 @@ router.get('/busstop/:code', function(req, res) {
         //sometimes is an object
         if (serverResponse.length == undefined) {
           let parsedContent = parseXml(serverResponse)
-          if (parsedContent.lineNumber === -1) {
+          if (parsedContent.line === -1) {
             var responseDatabaseObj = new ResponseDatabase();
             responseDatabaseObj.stopCode = req.params.code
             responseDatabaseObj.httpStatus = 501;
@@ -136,7 +138,7 @@ router.get('/busstop/:code', function(req, res) {
         //sometimes is an Array
         for (let i = 0; i < serverResponse.length; i++) {
           let parsedContent = parseXml(serverResponse[i])
-          if (parsedContent.lineNumber === -1) {
+          if (parsedContent.line === -1) {
             var responseDatabaseObj = new ResponseDatabase();
             responseDatabaseObj.stopCode = req.params.code
             responseDatabaseObj.httpStatus = 501;
@@ -202,14 +204,106 @@ router.get('/busstop/:code', function(req, res) {
 
 router.get('/database/findAll', function(req, res) {
   // get all the users
-  ResponseDatabase.find({}, function(err, responses) {
-    if (err) throw err;
-    // object of all the users
-    console.log(responses);
-    res.setHeader('Content-Type', 'application/json')
-    res.send(responses)
-  });
+  ResponseDatabase.find()
+    .then(responses => {
+      console.log(responses);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(responses);
+    })
+    .catch(e => {
+      console.log(e)
+    });
 })
+
+router.get('/database/workingLines', function(req, res) {
+  ResponseDatabase.aggregate([{
+        $match: {
+          httpStatus: 200
+        }
+      },
+      {
+        $group: {
+          _id: "$line"
+        }
+      }, {
+        $sort: {
+          _id: 1
+        }
+      }
+    ])
+    .then(responses => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(responses);
+    })
+    .catch(e => {
+      console.log('aggregate error');
+      console.log(e)
+    });
+})
+
+router.get('/database/workingStops/:line', function(req, res) {
+  console.log(req.params.line);
+  var projection = {
+    stopCode: 1,
+    httpStatus: 1,
+    line: 1,
+    latitudParada: 1,
+    longitudParada: 1
+  }
+
+  var query = {
+    line: req.params.line
+  }
+  ResponseDatabase.aggregate([{
+      $match: query
+    }, {
+      $project: projection
+    }])
+    .then(responses => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(responses);
+    })
+    .catch(e => {
+      console.log('aggregate error');
+      console.log(e)
+    });
+})
+
+
+
+router.get('/testAll', function(req, res) {
+  for (var i = JsonFile.length - 1; i > 0; i--) {
+    var stopCode = JsonFile[i].stopCode
+    setTimeout(testAPI(stopCode), 2000 * i);
+  }
+  res.send()
+})
+
+
+function testAPI(stopCode) {
+  return function() {
+    // does something with param
+    console.log(stopCode);
+    axios.get('https://vebondi.com/api/busstop/' + stopCode)
+      .then(response => {
+        var object = {
+          stopCode: stopCode,
+          status: true
+        }
+        appendDataToFile('tetAllResult', object);
+        console.log('success, ' + stopCode);
+      })
+      .catch(e => {
+        var object = {
+          stopCode: stopCode,
+          status: false
+        }
+        appendDataToFile('tetAllResult', object);
+        console.log('error, ' + stopCode);
+      })
+  }
+}
+
 
 // more routes for our API will happen here
 
@@ -226,7 +320,7 @@ if (process.env.NODE_ENV === 'production') {
   console.log('Frontend: 8081')
 
 }
-console.log('> Starting Express Server...')
+console.log('> Starting Express Server...');
 app.listen(port)
 
 
@@ -249,4 +343,19 @@ function parseXml(serverResponse) {
   let cleanText = serverResponse.arribo._text.replace(/. aprox./g, '')
   parsedContent.text = cleanText
   return parsedContent
+}
+
+function appendDataToFile(fileName, newData) {
+  fs.readFile(fileName + '.json', 'utf8', function readFileCallback(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      obj = JSON.parse(data); //now it an object
+      obj.push(newData); //add some data
+      json = JSON.stringify(obj); //convert it back to json
+      fs.writeFile(fileName + '.json', json, 'utf8', function() {
+        console.log('writeFile');
+      }); // write it back
+    }
+  });
 }
