@@ -13,6 +13,7 @@ const convert = require('xml-js')
 const cors = require('cors')
 const HashMap = require('hashmap')
 const mongoose = require('mongoose'); // mongoose for mongodb
+const cron = require('node-cron');
 const fs = require('fs'); // mongoose for mongodb
 const JsonFile = require('./src/assets/bus-stops.json')
 
@@ -195,7 +196,6 @@ router.get('/busstop/:code', function(req, res) {
     })
 })
 
-
 router.get('/database/findAll', function(req, res) {
   // get all the users
   ResponseDatabase.find()
@@ -236,68 +236,52 @@ router.get('/database/workingLines', function(req, res) {
 })
 
 router.get('/database/workingStops/:line', function(req, res) {
-  console.log(req.params.line);
-  var projection = {
-    stopCode: 1,
-    httpStatus: 1,
-    line: 1,
-    latitudParada: 1,
-    longitudParada: 1
-  }
-
+  var line = parseInt(req.params.line)
   var query = {
-    line: req.params.line
+    $and: [{
+      line: line
+    }, {
+      latitudParada: {
+        $ne: null
+      }
+    }]
   }
   ResponseDatabase.aggregate([{
       $match: query
     }, {
-      $project: projection
+      $group: {
+        "_id": {
+          stopCode: "$stopCode",
+          latitudParada: "$latitudParada",
+          longitudParada: "$longitudParada"
+        }
+      }
     }])
     .then(responses => {
       res.setHeader('Content-Type', 'application/json');
       res.send(responses);
     })
     .catch(e => {
-      console.log('aggregate error');
       console.log(e)
     });
 })
 
-
-
 router.get('/testAll', function(req, res) {
-  for (var i = JsonFile.length - 1; i > 0; i--) {
-    var stopCode = JsonFile[i].stopCode
+  for (var i = 0; i < JsonFile.length; i++) {
+    var stopCode = JsonFile[i].stopCode;
+    console.log('index', i);
     setTimeout(testAPI(stopCode), 2000 * i);
   }
   res.send()
 })
 
-
-function testAPI(stopCode) {
-  return function() {
-    // does something with param
-    console.log(stopCode);
-    axios.get('https://vebondi.com/api/busstop/' + stopCode)
-      .then(response => {
-        var object = {
-          stopCode: stopCode,
-          status: true
-        }
-        appendDataToFile('tetAllResult', object);
-        console.log('success, ' + stopCode);
-      })
-      .catch(e => {
-        var object = {
-          stopCode: stopCode,
-          status: false
-        }
-        appendDataToFile('tetAllResult', object);
-        console.log('error, ' + stopCode);
-      })
+cron.schedule('0 3 * * * *', function() {
+  for (var i = 0; i < JsonFile.length; i++) {
+    var stopCode = JsonFile[i].stopCode;
+    console.log('index', i);
+    setTimeout(testAPI(stopCode), 3000 * i);
   }
-}
-
+});
 
 // more routes for our API will happen here
 
@@ -318,6 +302,29 @@ console.log('> Starting Express Server...');
 app.listen(port)
 
 
+function testAPI(stopCode) {
+  return function() {
+    // does something with param
+    console.log(stopCode);
+    axios.get('https://vebondi.com/api/busstop/' + stopCode)
+      .then(response => {
+        var object = {
+          stopCode: stopCode,
+          status: true
+        }
+        // appendDataToFile('tetAllResult', object);
+        console.log('success, ' + stopCode);
+      })
+      .catch(e => {
+        var object = {
+          stopCode: stopCode,
+          status: false
+        }
+        // appendDataToFile('tetAllResult', object);
+        console.log('error, ' + stopCode);
+      })
+  }
+}
 
 function parseXml(serverResponse) {
   let parsedContent = {}
