@@ -275,13 +275,16 @@ router.get('/testAll', function(req, res) {
   res.send()
 })
 
-cron.schedule('0 3 * * * *', function() {
+
+var task = cron.schedule('0 6 * * *', function() {
   for (var i = 0; i < JsonFile.length; i++) {
     var stopCode = JsonFile[i].stopCode;
     console.log('index', i);
     setTimeout(testAPI(stopCode), 3000 * i);
   }
-});
+}, false);
+
+task.start()
 
 // more routes for our API will happen here
 

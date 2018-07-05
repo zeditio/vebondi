@@ -16,7 +16,7 @@
                     <b>{{ cardName }}</b>
                   </span>
                 <span v-else class="headline">
-                    C{{ stopCode }}
+                    {{ stopCode }}
                   </span>
             </v-flex>
             <v-flex xs2>
