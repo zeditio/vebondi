@@ -1,27 +1,30 @@
 <style>
 
-.full-height {
+  .full-height {
     height: 100%
-}
+  }
 
-#floating-panel {
+  #floating-panel {
     position: absolute;
     bottom: 0px;
     width: 75%;
     left: 5%
-}
+  }
 
 </style>
 
 <template type="text/babel">
 
-<div class="full-height">
-    <gmap-map ref="gmap" class="full-height" :center="center" :zoom="15" :options="{styles: styles, streetViewControl: false, fullscreenControl: false, disableDefaultUI: true}">
-        <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true" :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop, m, index)">
-        </gmap-marker>
+  <div class="full-height">
+    <gmap-map ref="gmap" class="full-height" :center="center" :zoom="15"
+              :options="{styles: styles, streetViewControl: false, fullscreenControl: false, disableDefaultUI: true}">
+      <gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" :clickable="true"
+                   :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop, m, index)">
+      </gmap-marker>
     </gmap-map>
-    <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode" :buttons="buttons" />
-</div>
+    <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode"
+                      :buttons="buttons"/>
+  </div>
 
 </template>
 
@@ -29,7 +32,7 @@
 // ///////////////////////////////////////
 // New in 0.4
 // https://github.com/xkjyeah/vue-google-maps/blob/HEAD/API.md
-import JsonFile from '@/assets/bus-stops.json'
+import BusStopsListByLine from '@/assets/bus-stops-by-line.json'
 import busStopImage from '@/assets/bus.png'
 import busStopImageSelected from '@/assets/bus-selected.png'
 import BusArrivalCard from '@/components/bus-arrival-card'
@@ -42,32 +45,39 @@ Vue.use(VueGoogleMaps, {
   }
 })
 export default {
+  props: {
+    line: {
+      required: true,
+      type: String
+    }
+  },
   data () {
     return {
-      styles: [{
-        'featureType': 'administrative',
-        'elementType': 'geometry',
-        'stylers': [{
-          'visibility': 'off'
-        }]
-      }, {
-        'featureType': 'poi',
-        'stylers': [{
-          'visibility': 'off'
-        }]
-      }, {
-        'featureType': 'road',
-        'elementType': 'labels.icon',
-        'stylers': [{
-          'visibility': 'off'
-        }]
-      }, {
-        'featureType': 'transit',
-        'stylers': [{
-          'visibility': 'off'
-        }]
-      }],
-      jsonFile: [],
+      styles: [
+        {
+          'featureType': 'administrative',
+          'elementType': 'geometry',
+          'stylers': [{
+            'visibility': 'off'
+          }]
+        }, {
+          'featureType': 'poi',
+          'stylers': [{
+            'visibility': 'off'
+          }]
+        }, {
+          'featureType': 'road',
+          'elementType': 'labels.icon',
+          'stylers': [{
+            'visibility': 'off'
+          }]
+        }, {
+          'featureType': 'transit',
+          'stylers': [{
+            'visibility': 'off'
+          }]
+        }],
+      busStopsListByLine: [],
       icon: {
         url: busStopImage,
         size: {
@@ -98,9 +108,17 @@ export default {
       })
       // timeout para que carge el loeade
       setTimeout(function afterOneSeconds () {
-        console.log('Cantidad de paradas:', vm.jsonFile.length)
-        for (var i = 0; i < vm.jsonFile.length; i++) {
-          var busStop = vm.jsonFile[i]
+        let currentBusStopsList
+        for (let item of vm.busStopsListByLine) {
+          if (item.key === vm.line) {
+            currentBusStopsList = item.result.d
+            break
+          }
+        }
+
+        console.log('Cantidad de paradas:', currentBusStopsList.length)
+        for (var i = 0; i < currentBusStopsList.length; i++) {
+          var busStop = currentBusStopsList[i]
           var marker = {
             position: {
               lat: null,
@@ -139,7 +157,7 @@ export default {
     }
   },
   mounted: function () {
-    this.jsonFile = JsonFile
+    this.busStopsListByLine = BusStopsListByLine
     this.getMarkers()
   },
   computed: {
