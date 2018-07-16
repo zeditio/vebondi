@@ -83,9 +83,9 @@
     <v-toolbar color="primary" dark app clipped-left fixed>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-spacer></v-spacer>
-      <v-toolbar-title style="width: 100%; margin: 0 auto;">
+      <v-toolbar-title style="width: 100%; margin: 0 auto; margin-left: -36px;">
         <v-layout row>
-          <v-flex xs4 offset-xs4 class="text-xs-center" @click="trackToolbarTitle()">
+          <v-flex xs12 class="text-xs-center" @click="trackToolbarTitle()">
             <router-link to="/">
               <h2 class="white--text">Vebondi</h2>
             </router-link>
