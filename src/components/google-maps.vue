@@ -22,8 +22,12 @@
                    :draggable="false" :icon="m.icon" @click="showBusArrivalCard(m.busStop, m, index)">
       </gmap-marker>
     </gmap-map>
-    <bus-arrival-card id="floating-panel" :isVisible="currentCard.isVisible" :stop-code="currentCard.stopCode"
-                      :buttons="buttons"/>
+    <bus-arrival-card  id="floating-panel"
+                       v-if="currentCard.isVisible"
+                       :stop-code="currentCard.stopCode"
+                       :lat="currentCard.lat"
+                       :lng="currentCard.lng"
+                       :buttons="buttons"/>
   </div>
 
 </template>
@@ -100,7 +104,7 @@ export default {
     }
   },
   methods: {
-    getMarkers: function () {
+    loadMarkers: function () {
       // We have the problem that the screen freeze loading all markers, so we run the process after 1s
       let vm = this
       vm.$store.commit({
@@ -125,8 +129,9 @@ export default {
               lng: null
             }
           }
-          marker.position.lat = busStop.lat
-          marker.position.lng = busStop.lng
+
+          marker.position.lat = parseFloat(busStop.latitudParada)
+          marker.position.lng = parseFloat(busStop.longitudParada)
           marker.busStop = busStop
           marker.icon = vm.icon
           vm.$store.commit({
@@ -141,6 +146,7 @@ export default {
       }, 2000)
     },
     showBusArrivalCard: function (busStop, marker, index) {
+      this.currentCard.isVisible = false
       // busStop -1 is the marker of gelocation
       if (busStop === -1) {
         return
@@ -152,13 +158,21 @@ export default {
         type: 'addMarker',
         marker: deppCopy
       })
-      this.currentCard.stopCode = busStop.stopCode
+
+      this.currentCard.stopCode = busStop.identificadorParada
+      this.currentCard.lat = busStop.latitudParada
+      this.currentCard.lng = busStop.longitudParada
       this.currentCard.isVisible = true
     }
   },
+  beforeMount: function () {
+    this.$store.commit({
+      type: 'removeAllMarkers'
+    })
+  },
   mounted: function () {
     this.busStopsListByLine = BusStopsListByLine
-    this.getMarkers()
+    this.loadMarkers()
   },
   computed: {
     center () {

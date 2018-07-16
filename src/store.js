@@ -27,6 +27,10 @@ const mutations = {
   showPageLoader (state, payload) {
     console.log('showPageLoader')
     state.showPageLoader = true
+  },
+  removeAllMarkers (state) {
+    console.log('removeAllMarkers')
+    state.markers = []
   }
 }
 export default new Vuex.Store({
