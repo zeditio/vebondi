@@ -100,22 +100,30 @@ router.get('/busstop/:code', function(req, res) {
           </RecuperarProximosArribos>
       </v:Body>
   </v:Envelope>`
-  console.log('\x1b[36m%s\x1b[0m', new Date(), '  ===============================================')
-  console.log('Request: ' + req.params.code);
+
+  if (process.env.NODE_ENV !== 'production'){
+    console.log('\x1b[36m%s\x1b[0m', new Date(), '  ===============================================')
+    console.log('Request: ' + req.params.code);
+  }
   axios.post('http://swandroidcuandollegasmp04.efibus.com.ar/Paradas.asmx', data, config)
     .then(response => {
+      if (process.env.NODE_ENV !== 'production'){
+        console.log('1- Raw Response (' + new Date() + ') : ')
+        console.log(response.data)
+      }
 
-      console.log('1- Raw Response (' + new Date() + ') : ')
-      console.log(response.data)
       let resultString = convert.xml2json(response.data, {
         compact: true,
         spaces: 4
       })
       let result = JSON.parse(resultString)
       let serverResponse = result['soap:Envelope']['soap:Body'].RecuperarProximosArribosResponse.RecuperarProximosArribosResult.ProximoArribo
-      console.log('')
-      console.log('2- Parsed Response: ')
-      console.log(JSON.stringify(serverResponse))
+      if (process.env.NODE_ENV !== 'production'){
+        console.log('')
+        console.log('2- Parsed Response: ')
+        console.log(JSON.stringify(serverResponse))
+      }
+
       if (serverResponse !== undefined) {
         //clean the xml
         let parsedArray = []
@@ -130,7 +138,10 @@ router.get('/busstop/:code', function(req, res) {
               if (err) throw err;
               console.log('\x1b[32m', 'Response saved successfully');
             })
-            console.log('\x1b[31m', 'Parada inexistente, eliminar: ' + req.params.code);
+            if (process.env.NODE_ENV !== 'production'){
+              console.log('\x1b[31m', 'Parada inexistente, eliminar: ' + req.params.code);
+            }
+
             res.status(501)
             res.send('Parada inexistente, reportar al administrador (@joseboretto): ' + req.params.code)
           }
@@ -173,9 +184,12 @@ router.get('/busstop/:code', function(req, res) {
           })
           parsedArray.push(parsedContent)
         }
-        console.log('3- Parsed Array: ')
-        console.log(parsedArray)
-        console.log('\x1b[32m', 'Exito');
+
+        if (process.env.NODE_ENV !== 'production'){
+          console.log('3- Parsed Array: ')
+          console.log(parsedArray)
+          console.log('\x1b[32m', 'Exito');
+        }
         res.setHeader('Content-Type', 'application/json')
         res.send(parsedArray)
       } else {
@@ -186,7 +200,9 @@ router.get('/busstop/:code', function(req, res) {
           if (err) throw err;
           console.log('\x1b[32m', 'Response saved successfully');
         })
-        console.log('\x1b[31m', 'Error, Service  Unavailable ');
+        if (process.env.NODE_ENV !== 'production'){
+          console.log('\x1b[31m', 'Error, Service  Unavailable ');
+        }
         res.status(503)
         res.send('Service Unavailable')
       }
@@ -276,15 +292,7 @@ router.get('/testAll', function(req, res) {
 })
 
 
-var task = cron.schedule('0 6 * * *', function() {
-  for (var i = 0; i < JsonFile.length; i++) {
-    var stopCode = JsonFile[i].stopCode;
-    console.log('index', i);
-    setTimeout(testAPI(stopCode), 3000 * i);
-  }
-}, false);
 
-task.start()
 
 // more routes for our API will happen here
 
@@ -295,7 +303,7 @@ app.use('/api', router)
 // START THE SERVER
 // =============================================================================
 if (process.env.NODE_ENV === 'production') {
-  console.log('Back and front on port: ' + port)
+  console.log('Backend and Frontend on port: ' + port)
 } else {
   console.log('Backend: ' + port)
   console.log('Frontend: 8081')
@@ -328,7 +336,6 @@ function testAPI(stopCode) {
       })
   }
 }
-
 function parseXml(serverResponse) {
   let parsedContent = {}
   let lineNumber = parseInt(serverResponse.linea._text)
@@ -348,7 +355,6 @@ function parseXml(serverResponse) {
   parsedContent.text = cleanText
   return parsedContent
 }
-
 function appendDataToFile(fileName, newData) {
   fs.readFile(fileName + '.json', 'utf8', function readFileCallback(err, data) {
     if (err) {

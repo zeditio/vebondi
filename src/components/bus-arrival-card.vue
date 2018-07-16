@@ -183,7 +183,7 @@ export default {
           })
           this.isVisibleMuteable = false
           this.snackbarColor = 'light-blue darken-4'
-          this.snackbarText = 'Informacion no disponible, intentelo mas tarde. <br> Parada: ' + this.stopCode
+          this.snackbarText = 'Informacion no disponible temporalmte.  <br>Intente otra parada o pruebe mas tarde. <br> Parada: ' + this.stopCode
           this.snackbarTimeout = 5000
           this.snackbar = false
           this.snackbar = true

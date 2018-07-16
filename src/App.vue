@@ -47,13 +47,12 @@
                          enable-resize-watcher
                          disable-route-watcher
                          absolute
+                         mini-variant
                          mobile-break-point="10240">
       <v-toolbar flat>
         <v-list>
-          <v-list-tile>
-            <v-list-tile-title class="title">
-              Vebondi
-            </v-list-tile-title>
+          <v-list-tile class="title">
+            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
           </v-list-tile>
         </v-list>
       </v-toolbar>
@@ -66,15 +65,9 @@
           v-for="item in items"
           :key="item.title">
 
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
+          <v-list-tile-action @click.stop="goTo(item.link)">
+            <img :src="item.icon" style="max-height: 24px;"/>
           </v-list-tile-action>
-
-          <v-list-tile-content>
-            <a :href="item.link" target="_blank">
-              <v-list-tile-title>{{ item.text }}</v-list-tile-title>
-            </a>
-          </v-list-tile-content>
         </v-list-tile>
 
       </v-list>
@@ -111,21 +104,19 @@ export default {
     return {
       dialog: false,
       drawer: false,
-      items: [{
-        icon: 'chat_bubble',
-        text: 'Enviar Comentario',
-        link: 'https://mail.google.com/mail/?view=cm&fs=1&to=joseboretto@gmail.com'
-      },
-      {
-        icon: 'thumb_up_alt',
-        text: 'Facebook',
-        link: 'https://www.facebook.com/vebondi/'
-      },
-      {
-        icon: 'photo_library',
-        text: 'Instagram',
-        link: 'https://www.instagram.com/vebondi.cordoba/'
-      }
+      items: [
+        {
+          icon: '/static/img/icons/facebook.svg',
+          link: 'https://www.facebook.com/vebondi/'
+        },
+        {
+          icon: '/static/img/icons/instagram.svg',
+          link: 'https://www.instagram.com/ve.bondi/'
+        },
+        {
+          icon: '/static/img/icons/gmail.svg',
+          link: 'mailto:joseboretto@gmail.com'
+        }
       ]
     }
   },
@@ -138,6 +129,10 @@ export default {
         eventCategory: 'navitagion',
         eventAction: 'toolbar_title'
       })
+    },
+    goTo (url) {
+      var win = window.open(url, '_blank')
+      win.focus()
     }
   },
   components: {
