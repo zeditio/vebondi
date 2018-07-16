@@ -23,7 +23,7 @@
       </gmap-marker>
     </gmap-map>
     <bus-arrival-card  id="floating-panel"
-                       v-if="currentCard.isVisible"
+                       :isVisible="currentCard.isVisible"
                        :stop-code="currentCard.stopCode"
                        :lat="currentCard.lat"
                        :lng="currentCard.lng"

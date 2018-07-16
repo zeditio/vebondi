@@ -104,11 +104,12 @@ export default {
       dialog: false,
       muteableCardName: '',
       muteableBusLines: this.busLines,
-      isVisibleMuteable: true,
+      isVisibleMuteable: this.isVisible,
       requestTime: '',
       cardAddressMuteable: this.cardAddress,
       cardNameMuteable: this.cardName,
       busLinesMuteable: this.busLines
+
     }
   },
   methods: {
@@ -135,6 +136,9 @@ export default {
       })
       axios.get('/api/busstop/' + this.stopCode)
         .then(response => {
+          if (!this.cardAddress) {
+            this.getCardAddress()
+          }
           this.$store.commit({
             type: 'hidePageLoader'
           })
@@ -195,23 +199,32 @@ export default {
         return
       }
       this.dialog = false
-      // [Vue warn]: Avoid mutating a prop directly
-      this.$props.cardName = this.muteableCardName
-      this.$props.busLines = this.muteableBusLines
+      let cardState = {
+        cardName: this.muteableCardName,
+        cardAddress: this.cardAddressMuteable,
+        stopCode: this.stopCode,
+        lat: this.lat,
+        lng: this.lng,
+        busLines: this.muteableBusLines,
+        buttons: this.buttons,
+        isVisible: true
+      }
+
       let savedCards = localStorage.getItem('savedCards')
-      // console.log(savedCards)
+      // la primera vez que se guardan da nulo
       if (savedCards === null) {
         savedCards = []
       } else {
         savedCards = JSON.parse(savedCards)
       }
-      // console.log(savedCards)
+      // elimino la tarjeta si ya fue guardada anteriormente
       for (var i = 0; i < savedCards.length; i++) {
         if (savedCards[i].stopCode === this.stopCode) {
           savedCards.splice(i, 1)
         }
       }
-      savedCards.unshift(this.$props)
+      // se agrega pero primero
+      savedCards.unshift(cardState)
       localStorage.setItem('savedCards', JSON.stringify(savedCards))
     },
     editCardName: function () {
@@ -241,16 +254,20 @@ export default {
       }
     },
     getCardAddress: function () {
-      this.$store.commit({
-        type: 'showPageLoader'
-      })
-      axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + this.lat + ',' + this.lng + '&sensor=true')
-        .then((data) => {
-          this.$store.commit({
-            type: 'hidePageLoader'
-          })
-          this.cardAddressMuteable = data.data.results['0'].formatted_address
+      if (!this.cardAddress) {
+        this.$store.commit({
+          type: 'showPageLoader'
         })
+        axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + this.lat + ',' + this.lng + '&sensor=true')
+          .then((data) => {
+            this.$store.commit({
+              type: 'hidePageLoader'
+            })
+            this.cardAddressMuteable = data.data.results['0'].address_components[1].short_name + ' ' + data.data.results['0'].address_components[0].short_name
+
+            this.saveCard()
+          })
+      }
     }
   },
   props: {
@@ -278,14 +295,19 @@ export default {
     buttons: {
       type: Array,
       required: true
+    },
+    isVisible: {
+      required: false
     }
   },
-  mounted: function () {
-    if (!this.busLines) {
-      this.getArrivals()
-    }
-    if (!this.cardAddress) {
-      this.getCardAddress()
+  watch: {
+    // whenever question changes, this function will run
+    stopCode: function () {
+      if (this.isVisible) {
+        if (!this.busLines) {
+          this.getArrivals()
+        }
+      }
     }
   }
 }
