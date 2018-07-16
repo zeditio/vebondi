@@ -28,7 +28,7 @@ export default {
         })
 
         this.$router.push({
-          name: 'buscar'
+          name: 'selecionarLinea'
         })
         return
       }

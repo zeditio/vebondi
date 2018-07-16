@@ -15,7 +15,15 @@
                     </v-flex>
                 </template>
                 <template v-for="(arrival, i) in myArrivals">
-                    <bus-arrival-card :card-name="arrival.cardName" :stop-code="arrival.stopCode" :bus-lines="arrival.busLines" :buttons="buttons" :isVisible="arrival.isVisible" @deleteCard="deleteCard" />
+                    <bus-arrival-card :card-name="arrival.cardName"
+                                      :stop-code="arrival.stopCode"
+                                      :cardAddress="arrival.cardAddress"
+                                      :bus-lines="arrival.busLines"
+                                      :buttons="buttons"
+                                      :lat="arrival.lat"
+                                      :lng="arrival.lng"
+                                      :isVisible="true"
+                                      @deleteCard="deleteCard" />
                 </template>
             </v-layout>
         </v-container>

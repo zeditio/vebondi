@@ -1,92 +1,96 @@
 <style>
 
-.pull-right {
-    float: right;
-}
 
 </style>
 
 <template type="text/babel">
 
-<v-flex xs12 md6>
-    <v-card class="dark--text" v-if="muteableIsVisible" transition="slide-y-reverse-transition">
-        <v-card-title>
-            <v-flex xs>
+  <v-flex xs12 md6>
+    <v-card class="dark--text" v-if="isVisibleMuteable" transition="slide-y-reverse-transition">
+      <v-card-title>
+        <v-flex xs>
                 <span v-if="cardName" class="body-2">
                     <b>{{ cardName }}</b>
                   </span>
-                <span v-else class="headline">
+          <span v-else class="headline">
                     {{ stopCode }}
                   </span>
-            </v-flex>
-            <v-flex xs2>
-                <div> <span class="grey--text text-xs-center"> {{ requestTime }} </span> </div>
-            </v-flex>
-            <v-flex xs2 v-for="(button, i) in buttons" :key="button" class="text-xs-center">
-                <template v-if="button === 'more_vert'">
-                    <v-menu bottom left>
-                        <v-btn icon slot="activator">
-                            <v-icon>more_vert</v-icon>
-                        </v-btn>
-                        <v-list>
-                            <v-list-tile @click="editCardName()">
-                                <v-list-tile-title>Editar</v-list-tile-title>
-                            </v-list-tile>
-                            <v-list-tile @click="deleteCard(stopCode)">
-                                <v-list-tile-title>Eliminar</v-list-tile-title>
-                            </v-list-tile>
-                        </v-list>
-                    </v-menu>
+        </v-flex>
+        <v-flex xs2>
+          <div><span class="grey--text text-xs-center"> {{ requestTime }} </span></div>
+        </v-flex>
+        <v-flex xs2 v-for="(button, i) in buttons" :key="button" class="text-xs-center">
+          <template v-if="button === 'more_vert'">
+            <v-menu bottom left>
+              <v-btn icon slot="activator">
+                <v-icon>more_vert</v-icon>
+              </v-btn>
+              <v-list>
+                <v-list-tile @click="editCardName()">
+                  <v-list-tile-title>Editar</v-list-tile-title>
+                </v-list-tile>
+                <v-list-tile @click="deleteCard(stopCode)">
+                  <v-list-tile-title>Eliminar</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-menu>
 
-                </template>
-                <template v-else>
-                    <v-icon @click="buttonAction(button, stopCode)">{{ button }}</v-icon>
-                </template>
-            </v-flex>
+          </template>
+          <template v-else>
+            <v-icon @click="buttonAction(button, stopCode)">{{ button }}</v-icon>
+          </template>
+        </v-flex>
+        <v-flex xs12>
+                <a v-bind:href="'https://maps.google.com/?q=' + lat + ',' + lng" target="_blank">
+                    {{ cardAddressMuteable }}
+                </a>
+        </v-flex>
 
-        </v-card-title>
-        <v-list style="background: inherit">
-            <v-list-tile v-for="(busLine, i) in muteableBusLines" :key="busLine.line">
-                <v-list-tile-action>
-                    <v-chip color="accent" disabled>{{ busLine.line }}</v-chip>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title>
-                        {{ busLine.text }}
-                    </v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-        </v-list>
+      </v-card-title>
+      <v-list style="background: inherit">
+        <v-list-tile v-for="(busLine, i) in muteableBusLines" :key="busLine.line">
+          <v-list-tile-action>
+            <v-chip color="accent" disabled>{{ busLine.line }}</v-chip>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ busLine.text }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
     </v-card>
     <v-snackbar :timeout="snackbarTimeout" :color="snackbarColor" v-model="snackbar" vertical multi-line>
-        <span v-html="snackbarText"></span>
+      <span v-html="snackbarText"></span>
     </v-snackbar>
 
     <v-dialog v-model="dialog" max-width="500px">
-        <v-card>
-            <v-form ref="form">
-                <v-card-title>
-                    <div class="headline"> Editar Nombre </div>
-                </v-card-title>
-                <v-card-text>
-                    <v-flex xs12>
-                        <v-text-field label="Nombre" v-model="muteableCardName" required hint="Maximo 20 caracteres" counter="20"></v-text-field>
-                    </v-flex>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="red" flat @click.native="dialog = false">Cancelar</v-btn>
-                    <v-btn color="green" flat @click.native="saveCard()">Guardar</v-btn>
-                </v-card-actions>
-            </v-form>
-        </v-card>
+      <v-card>
+        <v-form ref="form">
+          <v-card-title>
+            <div class="headline"> Editar Nombre</div>
+          </v-card-title>
+          <v-card-text>
+            <v-flex xs12>
+              <v-text-field label="Nombre" v-model="muteableCardName" required hint="Maximo 20 caracteres"
+                            counter="20"></v-text-field>
+            </v-flex>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red" flat @click.native="dialog = false">Cancelar</v-btn>
+            <v-btn color="green" flat @click.native="saveCard()">Guardar</v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
     </v-dialog>
-</v-flex>
+  </v-flex>
 
 </template>
 
 <script>
 import axios from 'axios'
+
 const HashMap = require('hashmap')
 
 export default {
@@ -100,15 +104,19 @@ export default {
       dialog: false,
       muteableCardName: '',
       muteableBusLines: this.busLines,
-      muteableIsVisible: this.isVisible,
-      requestTime: ''
+      isVisibleMuteable: this.isVisible,
+      requestTime: '',
+      cardAddressMuteable: this.cardAddress,
+      cardNameMuteable: this.cardName,
+      busLinesMuteable: this.busLines
+
     }
   },
   methods: {
     buttonAction: function (icon, stopCode) {
       switch (icon) {
         case 'close':
-          this.muteableIsVisible = false
+          this.isVisibleMuteable = false
           break
         case 'favorite':
           this.dialog = true
@@ -128,10 +136,13 @@ export default {
       })
       axios.get('/api/busstop/' + this.stopCode)
         .then(response => {
+          if (!this.cardAddress) {
+            this.getCardAddress()
+          }
           this.$store.commit({
             type: 'hidePageLoader'
           })
-          this.muteableIsVisible = true
+          this.isVisibleMuteable = true
           let date = new Date()
           let minutes = ('0' + date.getMinutes()).slice(-2)
           this.requestTime = date.getHours() + ':' + minutes
@@ -170,7 +181,7 @@ export default {
           this.$store.commit({
             type: 'hidePageLoader'
           })
-          this.muteableIsVisible = false
+          this.isVisibleMuteable = false
           this.snackbarColor = 'light-blue darken-4'
           this.snackbarText = 'Informacion no disponible, intentelo mas tarde. <br> Parada: ' + this.stopCode
           this.snackbarTimeout = 5000
@@ -188,23 +199,32 @@ export default {
         return
       }
       this.dialog = false
-      // [Vue warn]: Avoid mutating a prop directly
-      this.$props.cardName = this.muteableCardName
-      this.$props.busLines = this.muteableBusLines
+      let cardState = {
+        cardName: this.muteableCardName,
+        cardAddress: this.cardAddressMuteable,
+        stopCode: this.stopCode,
+        lat: this.lat,
+        lng: this.lng,
+        busLines: this.muteableBusLines,
+        buttons: this.buttons,
+        isVisible: true
+      }
+
       let savedCards = localStorage.getItem('savedCards')
-      // console.log(savedCards)
+      // la primera vez que se guardan da nulo
       if (savedCards === null) {
         savedCards = []
       } else {
         savedCards = JSON.parse(savedCards)
       }
-      // console.log(savedCards)
+      // elimino la tarjeta si ya fue guardada anteriormente
       for (var i = 0; i < savedCards.length; i++) {
         if (savedCards[i].stopCode === this.stopCode) {
           savedCards.splice(i, 1)
         }
       }
-      savedCards.unshift(this.$props)
+      // se agrega pero primero
+      savedCards.unshift(cardState)
       localStorage.setItem('savedCards', JSON.stringify(savedCards))
     },
     editCardName: function () {
@@ -232,6 +252,22 @@ export default {
           return
         }
       }
+    },
+    getCardAddress: function () {
+      if (!this.cardAddress) {
+        this.$store.commit({
+          type: 'showPageLoader'
+        })
+        axios.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + this.lat + ',' + this.lng + '&sensor=true')
+          .then((data) => {
+            this.$store.commit({
+              type: 'hidePageLoader'
+            })
+            this.cardAddressMuteable = data.data.results['0'].address_components[1].short_name + ' ' + data.data.results['0'].address_components[0].short_name
+
+            this.saveCard()
+          })
+      }
     }
   },
   props: {
@@ -239,7 +275,17 @@ export default {
       type: String,
       required: false
     },
+    cardAddress: {
+      type: String,
+      required: false
+    },
     stopCode: {
+      required: true
+    },
+    lat: {
+      required: true
+    },
+    lng: {
       required: true
     },
     busLines: {
@@ -251,15 +297,16 @@ export default {
       required: true
     },
     isVisible: {
-      type: Boolean,
-      required: true
+      required: false
     }
   },
   watch: {
     // whenever question changes, this function will run
     stopCode: function () {
       if (this.isVisible) {
-        this.getArrivals()
+        if (!this.busLines) {
+          this.getArrivals()
+        }
       }
     }
   }
