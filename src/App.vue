@@ -48,7 +48,8 @@
                          disable-route-watcher
                          absolute
                          mini-variant
-                         mobile-break-point="10240">
+                         mobile-break-point="10240"
+                         touchless>
       <v-toolbar flat>
         <v-list>
           <v-list-tile class="title">
