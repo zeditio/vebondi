@@ -8,10 +8,10 @@
             <v-layout row wrap>
                 <template v-if="myArrivals.length == 0">
                     <v-flex xs12 class="pt-5">
-                        <h2 class="text-xs-center grey--text"> ¿Seguis esperando el bondi?</h2>
+                        <h2 class="text-xs-center grey--text--darken-1"> ¿Seguis esperando el bondi?</h2>
                     </v-flex>
                     <v-flex xs12>
-                        <h4 class="text-xs-center grey--text"> Busca haciendo click en la lupa</h4>
+                        <h4 class="text-xs-center grey--text--darken-1"> Busca haciendo click en la lupa</h4>
                     </v-flex>
                 </template>
                 <template v-for="(arrival, i) in myArrivals">
@@ -40,7 +40,7 @@ export default {
   data () {
     return {
       myArrivals: [],
-      buttons: ['refresh', 'more_vert']
+      buttons: ['more_vert']
     }
   },
   methods: {

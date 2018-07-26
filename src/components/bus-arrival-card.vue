@@ -9,8 +9,8 @@
     <v-card class="dark--text" v-if="isVisibleMuteable" transition="slide-y-reverse-transition">
       <v-card-title>
         <v-flex xs>
-                <span v-if="cardName" class="body-2">
-                    <b>{{ cardName }}</b>
+                <span v-if="cardNameMuteable" class="body-2">
+                    <b>{{ cardNameMuteable }}</b>
                   </span>
           <span v-else class="headline">
                     {{ stopCode }}
@@ -18,6 +18,9 @@
         </v-flex>
         <v-flex xs2>
           <div><span class="grey--text text-xs-center"> {{ requestTime }} </span></div>
+        </v-flex>
+        <v-flex xs1>
+          <v-icon @click="buttonAction('refresh', stopCode)">refresh</v-icon>
         </v-flex>
         <v-flex xs2 v-for="(button, i) in buttons" :key="button" class="text-xs-center">
           <template v-if="button === 'more_vert'">
@@ -47,6 +50,7 @@
         </v-flex>
 
       </v-card-title>
+      <v-divider></v-divider>
       <v-list style="background: inherit">
         <v-list-tile v-for="(busLine, i) in muteableBusLines" :key="busLine.line">
           <v-list-tile-action>
@@ -72,7 +76,7 @@
           </v-card-title>
           <v-card-text>
             <v-flex xs12>
-              <v-text-field label="Nombre" v-model="muteableCardName" required hint="Maximo 20 caracteres"
+              <v-text-field label="Nombre" v-model="cardNameMuteable" required hint="Maximo 20 caracteres"
                             counter="20"></v-text-field>
             </v-flex>
           </v-card-text>
@@ -102,10 +106,9 @@ export default {
       snackbarColor: 'success',
       snackbarTimeout: 2000,
       dialog: false,
-      muteableCardName: '',
       muteableBusLines: this.busLines,
       isVisibleMuteable: this.isVisible,
-      requestTime: '',
+      requestTime: '¿?',
       cardAddressMuteable: this.cardAddress,
       cardNameMuteable: this.cardName,
       busLinesMuteable: this.busLines
@@ -195,18 +198,17 @@ export default {
         })
     },
     saveCard: function () {
-      if (this.dialog === true && this.muteableCardName.length > 20) {
+      if (this.dialog === true && this.cardNameMuteable.length > 20) {
         return
       }
       this.dialog = false
       let cardState = {
-        cardName: this.muteableCardName,
+        cardName: this.cardNameMuteable,
         cardAddress: this.cardAddressMuteable,
         stopCode: this.stopCode,
         lat: this.lat,
         lng: this.lng,
         busLines: this.muteableBusLines,
-        buttons: this.buttons,
         isVisible: true
       }
 
@@ -229,7 +231,7 @@ export default {
     },
     editCardName: function () {
       this.dialog = true
-      this.muteableCardName = ''
+      this.cardNameMuteable = ''
       // ga('send', 'event', '[category]', '[action]', '[label]', [value]);
       this.$ga.event({
         eventCategory: 'card_event',
