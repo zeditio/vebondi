@@ -5,17 +5,22 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="google-site-verification" content="M1lEKBfz7QLS_4cSH863FsWSk7T8jw5dBeWv4c1K68E" />
-  <meta name="Description" CONTENT="Consulta cuando llega el proximo colectivo de Cordoba Capital de la manera mas facil.">
+  <meta name="google-site-verification" content="M1lEKBfz7QLS_4cSH863FsWSk7T8jw5dBeWv4c1K68E"/>
+  <meta name="Description"
+        CONTENT="Consulta cuando llega el proximo colectivo de Cordoba Capital de la manera mas facil.">
   <meta name="title" CONTENT="Vebondi - Cuando llega cordoba">
-  <meta name="keywords" content="vebondi,cordoba,argentina,cuando llega,efisat,ersa,coniferal,municipalidad,miautobus,redbus">
+  <meta name="keywords"
+        content="vebondi,cordoba,argentina,cuando llega,efisat,ersa,coniferal,municipalidad,miautobus,redbus">
   <meta name="author" content="Jose Boretto">
 
 
   <title>vebondi</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-16x16.png">
-  <!--[if IE]><link rel="shortcut icon" href="/static/img/icons/favicon.ico"><![endif]-->
+  <link rel="icon" type="image/png" sizes="32x32"
+        href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16"
+        href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-16x16.png">
+  <!--[if IE]>
+  <link rel="shortcut icon" href="/static/img/icons/favicon.ico"><![endif]-->
   <!-- Add to home screen for Android and modern mobile browsers -->
   <link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath %>static/manifest.json">
   <meta name="theme-color" content="#ff7fab">
@@ -25,31 +30,63 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="vebondi">
   <link rel="apple-touch-icon" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/apple-touch-icon.png">
-  <link rel="mask-icon" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/safari-pinned-tab.svg" color="#4DBA87">
+  <link rel="mask-icon" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/safari-pinned-tab.svg"
+        color="#4DBA87">
   <!-- Add to home screen for Windows -->
-  <meta name="msapplication-TileImage" content="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/mstile-150x150.png">
+  <meta name="msapplication-TileImage"
+        content="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/mstile-150x150.png">
   <meta name="msapplication-TileColor" content="#000000">
   <link href='https://fonts.googleapis.com/css?family=Roboto|Material+Icons' rel="stylesheet">
 
+  <!-- Facebook Pixel Code -->
+  <script>
+    /* eslint-disable no-unused-expressions,no-undef */
+    !((f, b, e, v, n, t, s) => {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod
+          ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      }
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0'
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0
+      t.src = v;
+      s = b.getElementsByTagName(e)[0]
+      s.parentNode.insertBefore(t, s)
+    })(window, document, 'script',
+      'https://connect.facebook.net/en_US/fbevents.js')
+    fbq('init', '238888013603817')
+    fbq('track', 'PageView')
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+                 src="https://www.facebook.com/tr?id=238888013603817&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Facebook Pixel Code -->
+
+
   <% for (var chunk of webpack.chunks) {
-        for (var file of chunk.files) {
-          if (file.match(/\.(js|css)$/)) { %>
-    <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>">
-    <% }}} %>
+  for (var file of chunk.files) {
+  if (file.match(/\.(js|css)$/)) { %>
+  <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>"
+        as="<%= file.match(/\.css$/)?'style':'script' %>">
+  <% }}} %>
 
 
 </head>
 
 <body>
-  <noscript>
-      This is your fallback content in case JavaScript fails to load.
-    </noscript>
-  <div id="app"></div>
-  <!-- Todo: only include in production -->
-  <%= htmlWebpackPlugin.options.serviceWorkerLoader %>
-    <!-- built files will be auto injected -->
+<noscript>
+  This is your fallback content in case JavaScript fails to load.
+</noscript>
+<div id="app"></div>
+<!-- Todo: only include in production -->
+<%= htmlWebpackPlugin.options.serviceWorkerLoader %>
+<!-- built files will be auto injected -->
 </body>
-
 
 
 </html>
