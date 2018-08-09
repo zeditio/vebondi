@@ -2,6 +2,18 @@
 <html lang="en">
 
 <head>
+  <!-- FAST PRELOADING-->
+  <link rel="preload" href="/static/img/icons/android-chrome-192x192.png" as="image">
+  <style>
+    * {
+      background-repeat: no-repeat;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+
+  <!-- end: FAST PRELOADING-->
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,10 +27,14 @@
 
 
   <title>vebondi</title>
+
+
   <link rel="icon" type="image/png" sizes="32x32"
         href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16"
         href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-16x16.png">
+
+
   <!--[if IE]>
   <link rel="shortcut icon" href="/static/img/icons/favicon.ico"><![endif]-->
   <!-- Add to home screen for Android and modern mobile browsers -->
@@ -38,45 +54,29 @@
   <meta name="msapplication-TileColor" content="#000000">
   <link href='https://fonts.googleapis.com/css?family=Roboto|Material+Icons' rel="stylesheet">
 
+
   <!-- Add launch screen iOS-->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_2048.png" sizes="2048x2732" rel="apple-touch-startup-image" />
-  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1668.png" sizes="1668x2224" rel="apple-touch-startup-image" />
-  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1536.png" sizes="1536x2048" rel="apple-touch-startup-image" />
-  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1125.png" sizes="1125x2436" rel="apple-touch-startup-image" />
-  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1242.png" sizes="1242x2208" rel="apple-touch-startup-image" />
-  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_750.png" sizes="750x1334" rel="apple-touch-startup-image" />
-  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_640.png" sizes="640x1136" rel="apple-touch-startup-image" />
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_2048.png" sizes="2048x2732"
+        rel="apple-touch-startup-image"/>
+  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1668.png" sizes="1668x2224"
+        rel="apple-touch-startup-image"/>
+  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1536.png" sizes="1536x2048"
+        rel="apple-touch-startup-image"/>
+  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1125.png" sizes="1125x2436"
+        rel="apple-touch-startup-image"/>
+  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_1242.png" sizes="1242x2208"
+        rel="apple-touch-startup-image"/>
+  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_750.png" sizes="750x1334"
+        rel="apple-touch-startup-image"/>
+  <link href="<%= htmlWebpackPlugin.files.publicPath %>static/img/splash/apple_splash_640.png" sizes="640x1136"
+        rel="apple-touch-startup-image"/>
 
-  <!-- Facebook Pixel Code -->
   <script>
-    /* eslint-disable no-unused-expressions,no-undef */
-    !((f, b, e, v, n, t, s) => {
-      if (f.fbq) return;
-      n = f.fbq = function () {
-        n.callMethod
-          ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      }
-      if (!f._fbq) f._fbq = n;
-      n.push = n;
-      n.loaded = !0;
-      n.version = '2.0'
-      n.queue = [];
-      t = b.createElement(e);
-      t.async = !0
-      t.src = v;
-      s = b.getElementsByTagName(e)[0]
-      s.parentNode.insertBefore(t, s)
-    })(window, document, 'script',
-      'https://connect.facebook.net/en_US/fbevents.js')
-    fbq('init', '238888013603817')
-    fbq('track', 'PageView')
+    window.onload = function () {
+      document.getElementById('preloader').style.display = 'none'
+    }
   </script>
-  <noscript><img height="1" width="1" style="display:none"
-                 src="https://www.facebook.com/tr?id=238888013603817&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Facebook Pixel Code -->
-
 
   <% for (var chunk of webpack.chunks) {
   for (var file of chunk.files) {
@@ -88,15 +88,62 @@
 
 </head>
 
-<body>
+<body style="margin: 0;">
 <noscript>
   This is your fallback content in case JavaScript fails to load.
 </noscript>
+<div id="preloader" style="
+  background-color: #d81b60;
+  position: fixed;
+  z-index: 999;
+  margin: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;">
+  <h2 id="preloader-content" style="  text-align: center;
+  font-size: 5em;
+  padding-top: 30vh;
+  font-family: Arial;
+  color: white;">Vebondi</h2>
+  <div id="preloader-img" style="  background: url(/static/img/icons/android-chrome-192x192.png) center center no-repeat scroll;
+  height: 30vh;"></div>
+</div>
 <div id="app"></div>
 <!-- Todo: only include in production -->
 <%= htmlWebpackPlugin.options.serviceWorkerLoader %>
 <!-- built files will be auto injected -->
 </body>
+
+
+<!-- Facebook Pixel Code -->
+<script>
+  /* eslint-disable no-unused-expressions,no-undef */
+  !((f, b, e, v, n, t, s) => {
+    if (f.fbq) return
+    n = f.fbq = function () {
+      n.callMethod
+        ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+    }
+    if (!f._fbq) f._fbq = n
+    n.push = n
+    n.loaded = !0
+    n.version = '2.0'
+    n.queue = []
+    t = b.createElement(e)
+    t.async = !0
+    t.src = v
+    s = b.getElementsByTagName(e)[0]
+    s.parentNode.insertBefore(t, s)
+  })(window, document, 'script',
+    'https://connect.facebook.net/en_US/fbevents.js')
+  fbq('init', '238888013603817')
+  fbq('track', 'PageView')
+</script>
+<noscript><img height="1" width="1" style="display:none"
+               src="https://www.facebook.com/tr?id=238888013603817&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
 
 
 </html>
