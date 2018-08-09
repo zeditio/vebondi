@@ -101,11 +101,36 @@ const webpackConfig = merge(baseWebpackConfig, {
     }]),
     // service worker caching
     new SWPrecacheWebpackPlugin({
-      cacheId: 'vebondi',
+      cacheId: 'vebondi-v4',
       filename: 'service-worker.js',
-      staticFileGlobs: ['dist/**/*.{js,html,css}'],
+      staticFileGlobs: ['dist/**/*.{js,html,css,svg,json,png}'],
       minify: true,
-      stripPrefix: 'dist/'
+      stripPrefix: 'dist/',
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\//,
+          handler: 'cacheFirst'
+        },
+        {
+          urlPattern: /^https:\/\/maps\.googleapis\.com\//,
+          handler: 'cacheFirst'
+        },
+        {
+          urlPattern: /^https:\/\/connect\.facebook\.net\//,
+          handler: 'cacheFirst'
+        },
+        {
+          urlPattern: /^https:\/\/facebook\.com\//,
+          handler: 'cacheFirst'
+        },
+        {
+          urlPattern: /localhost:\d*\/static\//,
+          handler: 'cacheFirst'
+        },
+        {
+          urlPattern: /vebondi\.com\/static\//,
+          handler: 'cacheFirst'
+        }]
     })
   ]
 })

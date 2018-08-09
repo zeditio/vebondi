@@ -81,8 +81,19 @@
         <v-layout row>
           <v-flex xs12 class="text-xs-center" @click="trackToolbarTitle()">
             <router-link to="/">
-              <h2 class="white--text">Vebondi</h2>
+              <h2 class="white--text">Vebondi
+                <v-tooltip bottom v-show="!navigator.onLine">
+                  <v-icon
+                    slot="activator"
+                    color="warning"
+                    dark
+                  >warning
+                  </v-icon>
+                  <span>Sin conexion a internet</span>
+                </v-tooltip>
+              </h2>
             </router-link>
+
           </v-flex>
         </v-layout>
       </v-toolbar-title>
@@ -91,6 +102,7 @@
 
     <v-content class="content">
       <router-view></router-view>
+
     </v-content>
     <fab></fab>
   </v-app>
@@ -107,18 +119,16 @@ export default {
       drawer: false,
       items: [
         {
+          icon: '/static/img/icons/instagram.svg',
+          link: 'https://www.instagram.com/vebondi.cordoba/'
+        },
+        {
           icon: '/static/img/icons/facebook.svg',
           link: 'https://www.facebook.com/vebondi/'
-        },
-        {
-          icon: '/static/img/icons/instagram.svg',
-          link: 'https://www.instagram.com/ve.bondi/'
-        },
-        {
-          icon: '/static/img/icons/gmail.svg',
-          link: 'mailto:joseboretto@gmail.com'
         }
-      ]
+
+      ],
+      navigator: navigator
     }
   },
   props: {

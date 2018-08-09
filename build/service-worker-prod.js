@@ -54,6 +54,7 @@
               };
             }
           };
+          //cache ??
         }).catch(function(e) {
           console.error('Error during service worker registration:', e);
         });

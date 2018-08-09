@@ -71,11 +71,13 @@ export default {
   },
   computed: {
     hidden: function () {
-      if (this.$route.name === 'llegadas') {
-        return false
-      }
-      if (this.$route.name === 'buscar') {
-        return false
+      if (navigator.onLine) {
+        if (this.$route.name === 'llegadas') {
+          return false
+        }
+        if (this.$route.name === 'buscar') {
+          return false
+        }
       }
       return true
     },

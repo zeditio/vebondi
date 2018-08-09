@@ -11,7 +11,7 @@
                         <h2 class="text-xs-center grey--text--darken-1"> ¿Seguis esperando el bondi?</h2>
                     </v-flex>
                     <v-flex xs12>
-                        <h4 class="text-xs-center grey--text--darken-1"> Busca haciendo click en la lupa</h4>
+                        <h4 class="text-xs-center grey--text--darken-1"> Busca haciendo click en la lupa </h4>
                     </v-flex>
                 </template>
                 <template v-for="(arrival, i) in myArrivals">

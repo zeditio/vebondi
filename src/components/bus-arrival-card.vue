@@ -44,9 +44,9 @@
           </template>
         </v-flex>
         <v-flex xs12>
-                <a v-bind:href="'https://maps.google.com/?q=' + lat + ',' + lng" target="_blank">
-                    {{ cardAddressMuteable }}
-                </a>
+          <a v-bind:href="'https://maps.google.com/?q=' + lat + ',' + lng" target="_blank">
+            {{ cardAddressMuteable }}
+          </a>
         </v-flex>
 
       </v-card-title>
@@ -134,68 +134,76 @@ export default {
       }
     },
     getArrivals: function () {
-      this.$store.commit({
-        type: 'showPageLoader'
-      })
-      axios.get('/api/busstop/' + this.stopCode)
-        .then(response => {
-          if (!this.cardAddress) {
-            this.getCardAddress()
-          }
-          this.$store.commit({
-            type: 'hidePageLoader'
-          })
-          this.isVisibleMuteable = true
-          let date = new Date()
-          let minutes = ('0' + date.getMinutes()).slice(-2)
-          this.requestTime = date.getHours() + ':' + minutes
-          console.log(response.data)
-
-          let map = new HashMap()
-          // group the result by line in lineal order
-          for (let i = 0; i < response.data.length; i++) {
-            let currentLine = response.data[i].line
-            if (map.has(currentLine)) {
-              let text = map.get(currentLine)
-              text = text + ' ' + response.data[i].text + ','
-              map.set(currentLine, text)
-            } else {
-              let text = response.data[i].text + ','
-              map.set(currentLine, text)
+      if (navigator.onLine) {
+        this.$store.commit({
+          type: 'showPageLoader'
+        })
+        axios.get('/api/busstop/' + this.stopCode)
+          .then(response => {
+            if (!this.cardAddress) {
+              this.getCardAddress()
             }
-          }
-          let responseArray = []
-          map.forEach(function (value, key) {
-            let object = {}
-            object.line = key
-            // Remove last comma
-            value = value.replace(/,\s*$/, '')
-            object.text = value
-            responseArray.push(object)
+            this.$store.commit({
+              type: 'hidePageLoader'
+            })
+            this.isVisibleMuteable = true
+            let date = new Date()
+            let minutes = ('0' + date.getMinutes()).slice(-2)
+            this.requestTime = date.getHours() + ':' + minutes
+            console.log(response.data)
+
+            let map = new HashMap()
+            // group the result by line in lineal order
+            for (let i = 0; i < response.data.length; i++) {
+              let currentLine = response.data[i].line
+              if (map.has(currentLine)) {
+                let text = map.get(currentLine)
+                text = text + ' ' + response.data[i].text + ','
+                map.set(currentLine, text)
+              } else {
+                let text = response.data[i].text + ','
+                map.set(currentLine, text)
+              }
+            }
+            let responseArray = []
+            map.forEach(function (value, key) {
+              let object = {}
+              object.line = key
+              // Remove last comma
+              value = value.replace(/,\s*$/, '')
+              object.text = value
+              responseArray.push(object)
+            })
+            this.muteableBusLines = responseArray
+            this.saveCard()
+            this.$ga.event({
+              eventCategory: 'map',
+              eventAction: 'get_arraivals_sucess'
+            })
           })
-          this.muteableBusLines = responseArray
-          this.saveCard()
-          this.$ga.event({
-            eventCategory: 'map',
-            eventAction: 'get_arraivals_sucess'
+          .catch(e => {
+            this.$store.commit({
+              type: 'hidePageLoader'
+            })
+            this.isVisibleMuteable = false
+            this.snackbarColor = 'light-blue darken-4'
+            this.snackbarText = 'Informacion no disponible temporalmte.  <br>Intente otra parada o pruebe mas tarde. <br> Parada: ' + this.stopCode
+            this.snackbarTimeout = 5000
+            this.snackbar = false
+            this.snackbar = true
+            console.log(e)
+            this.$ga.event({
+              eventCategory: 'map',
+              eventAction: 'get_arraivals_error'
+            })
           })
-        })
-        .catch(e => {
-          this.$store.commit({
-            type: 'hidePageLoader'
-          })
-          this.isVisibleMuteable = false
-          this.snackbarColor = 'light-blue darken-4'
-          this.snackbarText = 'Informacion no disponible temporalmte.  <br>Intente otra parada o pruebe mas tarde. <br> Parada: ' + this.stopCode
-          this.snackbarTimeout = 5000
-          this.snackbar = false
-          this.snackbar = true
-          console.log(e)
-          this.$ga.event({
-            eventCategory: 'map',
-            eventAction: 'get_arraivals_error'
-          })
-        })
+      } else {
+        this.snackbarColor = 'light-yellow darken-4'
+        this.snackbarText = 'No es posible actualizar los horarios sin conexiona internet'
+        this.snackbarTimeout = 5000
+        this.snackbar = false
+        this.snackbar = true
+      }
     },
     saveCard: function () {
       if (this.dialog === true && this.cardNameMuteable.length > 20) {
