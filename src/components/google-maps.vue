@@ -43,9 +43,10 @@ import BusArrivalCard from '@/components/bus-arrival-card'
 import Vue from 'vue'
 import * as VueGoogleMaps from 'vue2-google-maps'
 
+//  https://console.cloud.google.com/google/maps-apis/apis/
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyD0sdRX1gWoHkmCqjsefcaowUrdBtVj2p4'
+    key: 'AIzaSyA9hqwfXBxah1pjdQX-bkHZuao64cCs9fo'
   }
 })
 export default {
