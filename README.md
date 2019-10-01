@@ -1,5 +1,7 @@
 # vebondi
 
+Youtube Video: https://www.youtube.com/watch?v=J_dDAdVAikI 
+
 ### Abstract
 This is App to check real time bus arrivals in Córdoba, Argentina. 
 In this project I put in practice my frontend developer, design and marketing skills.
