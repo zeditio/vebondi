@@ -1,6 +1,8 @@
 # vebondi
 
-Youtube Video: https://www.youtube.com/watch?v=J_dDAdVAikI 
+Youtube Video (https://www.youtube.com/watch?v=J_dDAdVAikI)
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/J_dDAdVAikI/0.jpg)](https://www.youtube.com/watch?v=J_dDAdVAikI)
 
 ### Abstract
 This is App to check real time bus arrivals in Córdoba, Argentina. 
@@ -38,13 +40,13 @@ https://github.com/joseboretto/vebondi/issues/1
 ### Images
 
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Mockup.png" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Mockup.png" height="400">
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Marketing%20Campaign.png" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Marketing%20Campaign.png" height="400">
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Story.jpg" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Story.jpg" height="400">
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg" height="400">
 <br>
 
 
