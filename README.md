@@ -17,16 +17,25 @@ By the year 2017, I bought my first iPhone and at that moment there was any app 
 I wanted to complete the whole process from the idea to the marketing campaign. The steps followed was:
 
 1. Mockup (photoshop)
-![Mockup](https://github.com/joseboretto/vebondi/blob/master/images/Mockup.png)
+
 2. Code (Progresive Web App using Vue.js)
 3. Deploy at https://zeit.co/
 4. Marketing Course at https://platzi.com 
 5. Marketing Campaign with Facebook Pixel 
-![Marketing%20Campaign](https://github.com/joseboretto/vebondi/blob/master/images/Marketing%20Campaign.png)
-![Instagram](https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Story.jpg)
-![Instagram](https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg)
 https://www.instagram.com/vebondi.cordoba/
 6. Go live
+
+<br>
+<a href="url"><img src="https://github.com/joseboretto/vebondi/blob/master/images/Mockup.png" align="left" height="200"></a>
+<br>
+<a href="url"><img src="https://github.com/joseboretto/vebondi/blob/master/images/Marketing%20Campaign.png" align="left" height="200"></a>
+<br>
+<a href="url"><img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Story.jpg" align="left" height="200"></a>
+<br>
+<a href="url"><img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg" align="left" height="200"></a>
+<br>
+
+
 
 ### Result
 
