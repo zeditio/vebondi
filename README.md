@@ -25,6 +25,18 @@ I wanted to complete the whole process from the idea to the marketing campaign. 
 https://www.instagram.com/vebondi.cordoba/
 6. Go live
 
+### Result
+
+Approximately 100 people were using it and enjoying the app because I prometed the app using Instagram Stories.
+https://www.instagram.com/vebondi.cordoba/
+https://www.facebook.com/vebondi/ 
+
+After a month, someone from the local government contact me and said me that I can't consume the data from their site and changed the credentials, that is why the app is not working anymore.
+
+https://github.com/joseboretto/vebondi/issues/1
+
+### Images
+
 <br>
 <a href="url"><img src="https://github.com/joseboretto/vebondi/blob/master/images/Mockup.png" align="left" height="200"></a>
 <br>
@@ -35,15 +47,4 @@ https://www.instagram.com/vebondi.cordoba/
 <a href="url"><img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg" align="left" height="200"></a>
 <br>
 
-
-
-### Result
-
-Approximately 100 people were using it and enjoying the app because I prometed the app using Instagram Stories.
-https://www.instagram.com/vebondi.cordoba/
-https://www.facebook.com/vebondi/ 
-
-After a month, someone from the local government contact me and said me that I can't consume the data from their site and changed the credentials, that is why the app is not working anymore.
-
-https://github.com/joseboretto/vebondi/issues/1
 
