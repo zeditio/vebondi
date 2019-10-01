@@ -38,13 +38,13 @@ https://github.com/joseboretto/vebondi/issues/1
 ### Images
 
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Mockup.png" align="left" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Mockup.png" height="200">
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Marketing%20Campaign.png" align="left" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Marketing%20Campaign.png" height="200">
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Story.jpg" align="left" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Story.jpg" height="200">
 <br>
-<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg" align="left" height="200">
+<img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg" height="200">
 <br>
 
 
