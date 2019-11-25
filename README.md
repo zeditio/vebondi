@@ -1,8 +1,8 @@
 # vebondi
 
-Youtube Video (https://www.youtube.com/watch?v=J_dDAdVAikI)
+Youtube Video (https://www.youtube.com/watch?v=4lHybvm_5Qs)
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/J_dDAdVAikI/0.jpg)](https://www.youtube.com/watch?v=J_dDAdVAikI)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/4lHybvm_5Qs/0.jpg)](https://www.youtube.com/watch?v=4lHybvm_5Qs)
 
 ### Abstract
 This is App to check real time bus arrivals in Córdoba, Argentina. 
