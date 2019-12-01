@@ -49,4 +49,11 @@ https://github.com/joseboretto/vebondi/issues/1
 <img src="https://github.com/joseboretto/vebondi/blob/master/images/Instagram%20Profile.jpg" height="400">
 <br>
 
+### Deployment
+
+https://zeit.co/
+
+
+
+
 
